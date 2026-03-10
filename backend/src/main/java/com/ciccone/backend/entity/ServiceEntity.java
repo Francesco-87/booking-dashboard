@@ -1,6 +1,8 @@
-package com.ciccone.backend.service;
+package com.ciccone.backend.entity;
 
 import java.time.OffsetDateTime;
+import jakarta.validation.constraints.*;
+
 
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -17,13 +19,18 @@ public class ServiceEntity {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
+    @NotBlank
     private String name;
     private String description;
 
     @Column(name = "duration_minutes")
+    @Positive
     private Integer durationMinutes;
+
     @Column(name = "price_cents")
+    @PositiveOrZero
     private Integer priceCents;
+
     @Column(name = "is_active")
     private Boolean isActive;
     @Column(name = "created_at")

@@ -38,7 +38,7 @@ public class ServiceEntity {
     @Column(name = "updated_at")
     private OffsetDateTime updatedAt;
 
-    protected ServiceEntity() {
+    public ServiceEntity() {
     }
 
     public Long getId() {

@@ -11,7 +11,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ciccone.backend.entity.ServiceEntity;
+
+import com.ciccone.backend.dto.ServiceRequestDto;
+import com.ciccone.backend.dto.ServiceResponseDto;
 import com.ciccone.backend.service.ServiceService;
 
 import jakarta.validation.Valid;
@@ -21,31 +23,31 @@ import jakarta.validation.Valid;
 public class ServiceController {
 
     private final ServiceService serviceService;
+   
+
     public ServiceController(ServiceService serviceService) {
         this.serviceService = serviceService;
     }
 
-    @PostMapping
-    @Valid
-    public ServiceEntity createService(@RequestBody ServiceEntity service){
+    @PostMapping    
+    public ServiceResponseDto createService(@RequestBody @Valid ServiceRequestDto service){
 
         return serviceService.createService(service);
-
     }
 
     @GetMapping
-    public List<ServiceEntity> getAllServices() {
+    public List<ServiceResponseDto> getAllServices() {
         return serviceService.getAllServices();
     }
 
     @GetMapping("/{id}")
-    public ServiceEntity getServiceById(@PathVariable Long id) {
+    public ServiceResponseDto getServiceById(@PathVariable Long id) {
         return serviceService.getServiceById(id);
     }
 
     @PutMapping("/{id}")
     @Valid
-    public ServiceEntity updateService(@PathVariable Long id, @RequestBody ServiceEntity service){
+    public ServiceResponseDto updateService(@PathVariable Long id, @RequestBody ServiceRequestDto service){
         return serviceService.updateService(id, service);
     }
 

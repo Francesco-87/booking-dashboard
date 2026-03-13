@@ -1,9 +1,12 @@
 package com.ciccone.backend.dto;
 
+import org.springframework.stereotype.Component;
+
 import com.ciccone.backend.entity.ServiceEntity;
 
-public class ServiceMapper {
 
+@Component
+public class ServiceMapper {
 
  public ServiceEntity toEntity(ServiceRequestDto dto) {
         if (dto == null) {

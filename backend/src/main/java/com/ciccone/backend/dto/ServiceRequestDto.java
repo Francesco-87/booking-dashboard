@@ -2,20 +2,15 @@ package com.ciccone.backend.dto;
 
 import jakarta.validation.constraints.*;
 
-public class ServiceRequestDto {
-       
+public class ServiceRequestDto {      
    
     @NotBlank
     private String name;
     private String description;
-
     @Positive
     private Integer durationMinutes;
-
-
     @PositiveOrZero
     private Integer priceCents;
-
     private Boolean isActive;
 
     public String getName() {

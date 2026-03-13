@@ -15,12 +15,14 @@ import com.ciccone.backend.repository.ServiceRepository;
 public class ServiceService {
 
     private final ServiceRepository serviceRepository;
-    private final ServiceMapper serviceMapper = new ServiceMapper();
-    
+    private final ServiceMapper serviceMapper;
 
-    public ServiceService(ServiceRepository serviceRepository) {
+    public ServiceService(ServiceRepository serviceRepository, ServiceMapper serviceMapper) {
         this.serviceRepository = serviceRepository;
+        this.serviceMapper = serviceMapper;
     }
+
+    
 
     public ServiceResponseDto createService(ServiceRequestDto serviceRequestDto) {
          ServiceEntity serviceEntity = serviceMapper.toEntity(serviceRequestDto);

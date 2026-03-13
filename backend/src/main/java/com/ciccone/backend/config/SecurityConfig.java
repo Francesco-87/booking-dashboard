@@ -18,7 +18,7 @@ public class SecurityConfig {
 
             // Allow your POST for now (so you can test)
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers(HttpMethod.POST, "/api/services").permitAll()
+                .requestMatchers(HttpMethod.POST).permitAll()
                 .requestMatchers(HttpMethod.GET).permitAll()
                 .requestMatchers(HttpMethod.PUT).permitAll()
                 .requestMatchers(HttpMethod.DELETE).permitAll()

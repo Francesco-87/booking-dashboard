@@ -46,8 +46,7 @@ public class ServiceController {
     }
 
     @PutMapping("/{id}")
-    @Valid
-    public ServiceResponseDto updateService(@PathVariable Long id, @RequestBody ServiceRequestDto service){
+    public ServiceResponseDto updateService(@PathVariable Long id, @RequestBody @Valid ServiceRequestDto service){
         return serviceService.updateService(id, service);
     }
 

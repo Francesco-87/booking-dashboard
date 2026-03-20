@@ -1,0 +1,6 @@
+ALTER TABLE bookings
+ALTER COLUMN status TYPE VARCHAR(20) USING status::text;
+
+ALTER TABLE bookings
+ADD CONSTRAINT chk_bookings_status
+CHECK (status IN ('REQUESTED', 'CONFIRMED', 'CANCELLED', 'COMPLETED'));

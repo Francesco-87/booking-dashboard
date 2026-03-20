@@ -31,8 +31,8 @@ public class ServiceEntity {
     @PositiveOrZero
     private Integer priceCents;
 
-    @Column(name = "is_active")
-    private Boolean isActive;
+    @Column(name = "is_active", nullable = false)
+    private Boolean isActive = true;
     @Column(name = "created_at")
     private OffsetDateTime createdAt;
     @Column(name = "updated_at")

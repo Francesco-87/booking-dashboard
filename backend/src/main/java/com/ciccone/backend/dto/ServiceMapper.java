@@ -17,7 +17,7 @@ public class ServiceMapper {
         entity.setDescription(dto.getDescription());
         entity.setDurationMinutes(dto.getDurationMinutes());
         entity.setPriceCents(dto.getPriceCents());
-        entity.setIsActive(dto.getIsActive());
+         if (dto.getIsActive() != null) { entity.setIsActive(dto.getIsActive());}
         return entity;
                 
     }

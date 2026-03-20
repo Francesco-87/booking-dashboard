@@ -14,7 +14,7 @@ public class StaffProfileMapper {
         StaffProfileEntity entity = new StaffProfileEntity();
         entity.setUserId(dto.getUserId());
         entity.setDisplayName(dto.getDisplayName());
-        entity.setIsActive(dto.getIsActive() != null ? dto.getIsActive() : true);
+         if (dto.getIsActive() != null) { entity.setIsActive(dto.getIsActive());}
         return entity;
     }
 

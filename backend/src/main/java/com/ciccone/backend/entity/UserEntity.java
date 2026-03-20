@@ -4,37 +4,43 @@ import java.time.OffsetDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.*;
 
 @Entity
-@Table(name = "staff_profiles")
-
-public class StaffProfileEntity {
+@Table(name = "users")  
+public class UserEntity {
 
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "user_id")
-    @NotNull
-    private Long userId;
+    @Column(name = "full_name", nullable = false)
+    private String fullName;
 
-    @Column(name = "display_name")
-    @NotBlank
-    private String displayName;
+    @Column(name = "email", nullable = false, unique = true)
+    private String email;
+
+    @Column(name = "password_hash", nullable = false)
+    private String passwordHash;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role", nullable = false, columnDefinition = "user_role")
+    private UserRole role;
+
     @Column(name = "is_active", nullable = false)
-    private Boolean isActive = true;    
+    private Boolean isActive = true;
     @Column(name = "created_at")
     private OffsetDateTime createdAt;
     @Column(name = "updated_at")
     private OffsetDateTime updatedAt;
 
-    public StaffProfileEntity() {
-    }
+    public UserEntity() {
+    };
 
     public Long getId() {
         return id;
@@ -42,17 +48,29 @@ public class StaffProfileEntity {
     public void setId(Long id) {
         this.id = id;
     }
-    public Long getUserId() {
-        return userId;
+    public String getFullName() {
+        return fullName;
     }
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
-    public String getDisplayName() {
-        return displayName;
+    public String getEmail() {
+        return email;
     }
-    public void setDisplayName(String displayName) {
-        this.displayName = displayName;
+    public void setEmail(String email) {
+        this.email = email;
+    }
+    public String getPasswordHash() {
+        return passwordHash;
+    }
+    public void setPasswordHash(String passwordHash) {
+        this.passwordHash = passwordHash;
+    }
+    public UserRole getRole() {
+        return role;
+    }
+    public void setRole(UserRole role) {
+        this.role = role;
     }
     public Boolean getIsActive() {
         return isActive;
@@ -72,6 +90,6 @@ public class StaffProfileEntity {
     public void setUpdatedAt(OffsetDateTime updatedAt) {
         this.updatedAt = updatedAt;
     }
-  
+
     
 }

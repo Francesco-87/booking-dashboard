@@ -1,10 +1,14 @@
 package com.ciccone.backend.entity;
 
 import java.time.OffsetDateTime;
+import java.util.HashSet;
+import java.util.Set;
+
 import jakarta.validation.constraints.*;
 
 
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -37,6 +41,12 @@ public class ServiceEntity {
     private OffsetDateTime createdAt;
     @Column(name = "updated_at")
     private OffsetDateTime updatedAt;
+
+    @ManyToMany(mappedBy = "services")
+    private Set<StaffProfileEntity> staffProfiles = new HashSet<>();
+    
+
+    
 
     public ServiceEntity() {
     }
@@ -116,7 +126,13 @@ public class ServiceEntity {
     }
 
 
-    
+    // Getters and setters relationships
+    public Set<StaffProfileEntity> getStaffProfiles() {
+        return staffProfiles;
+    }
 
+    public void setStaffProfiles(Set<StaffProfileEntity> staffProfiles) {
+        this.staffProfiles = staffProfiles;
+    }
     
 }

@@ -51,4 +51,11 @@ public class StaffProfileController {
     public void deleteStaffProfile(@PathVariable Long id) {
         staffProfileService.deleteStaffProfile(id);
     }
+
+    // Additional endpoint to assign a service to a staff profile
+    @PostMapping("/{staffId}/services/{serviceId}")
+    public void assignServiceToStaffProfile(@PathVariable Long staffId, @PathVariable Long serviceId) {
+        staffProfileService.addServiceToStaffProfile(staffId, serviceId);
+    }
+
 }

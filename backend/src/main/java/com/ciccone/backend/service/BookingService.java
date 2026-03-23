@@ -10,7 +10,11 @@ import com.ciccone.backend.dto.BookingRequestDto;
 import com.ciccone.backend.dto.BookingResponseDto;
 import com.ciccone.backend.entity.BookingEntity;
 import com.ciccone.backend.entity.BookingStatus;
+import com.ciccone.backend.entity.ServiceEntity;
+import com.ciccone.backend.entity.StaffProfileEntity;
 import com.ciccone.backend.repository.BookingRepository;
+import com.ciccone.backend.repository.StaffProfileRepository;
+import com.ciccone.backend.repository.ServiceRepository;
 
 
 @Service
@@ -18,10 +22,14 @@ public class BookingService {
 
     private final BookingRepository bookingRepository;
     private final BookingMapper bookingMapper;
+    private final StaffProfileRepository staffProfileRepository;
+    private final ServiceRepository serviceRepository;
 
-    public BookingService(BookingRepository bookingRepository, BookingMapper bookingMapper) {
+    public BookingService(BookingRepository bookingRepository, BookingMapper bookingMapper, StaffProfileRepository staffProfileRepository, ServiceRepository serviceRepository) {
         this.bookingRepository = bookingRepository;
         this.bookingMapper = bookingMapper;
+        this.staffProfileRepository = staffProfileRepository;
+        this.serviceRepository = serviceRepository;
     }
 
     public BookingResponseDto createBooking(BookingRequestDto bookingRequestDto) {
@@ -30,6 +38,15 @@ public class BookingService {
         bookingEntity.setCreatedAt(now);
         bookingEntity.setUpdatedAt(now);
         bookingEntity.setStatus(BookingStatus.REQUESTED);
+        StaffProfileEntity staffProfile = staffProfileRepository.findById(bookingRequestDto.getStaffProfileId())
+        .orElseThrow(() -> new RuntimeException("Staff profile not found"));
+
+        ServiceEntity service = serviceRepository.findById(bookingRequestDto.getServiceId())
+        .orElseThrow(() -> new RuntimeException("Service not found"));
+            if (!staffProfile.getServices().contains(service)) {
+            throw new RuntimeException("Staff cannot perform this service");
+}
+
         return bookingMapper.toResponseDto(bookingRepository.save(bookingEntity));
     }
     

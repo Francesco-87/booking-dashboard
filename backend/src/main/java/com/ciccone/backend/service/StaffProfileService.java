@@ -7,7 +7,9 @@ import org.springframework.stereotype.Service;
 import com.ciccone.backend.dto.StaffProfileMapper;
 import com.ciccone.backend.dto.StaffProfileRequestDto;
 import com.ciccone.backend.dto.StaffProfileResponseDto;
+import com.ciccone.backend.entity.ServiceEntity;
 import com.ciccone.backend.entity.StaffProfileEntity;
+import com.ciccone.backend.repository.ServiceRepository;
 import com.ciccone.backend.repository.StaffProfileRepository;
 
 @Service
@@ -15,10 +17,12 @@ public class StaffProfileService {
 
     private final StaffProfileRepository staffProfileRepository;
     private final StaffProfileMapper staffProfileMapper;
+    private final ServiceRepository serviceRepository;
 
-    public StaffProfileService(StaffProfileRepository staffProfileRepository, StaffProfileMapper staffProfileMapper) {
+    public StaffProfileService(StaffProfileRepository staffProfileRepository, StaffProfileMapper staffProfileMapper, ServiceRepository serviceRepository) {
         this.staffProfileRepository = staffProfileRepository;
         this.staffProfileMapper = staffProfileMapper;
+        this.serviceRepository = serviceRepository;
     }
 
     public StaffProfileResponseDto createStaffProfile(StaffProfileRequestDto staffProfileRequestDto) {
@@ -61,6 +65,21 @@ public class StaffProfileService {
                 .orElseThrow(() -> new RuntimeException("Staff profile not found"));
         staffProfileRepository.delete(existingStaffProfile);
 
+    }
+
+
+    // METHODS TO MANAGE SERVICES ASSOCIATED WITH STAFF PROFILES CAN BE ADDED HERE
+
+    public void addServiceToStaffProfile( Long staffProfileId, Long serviceId) {
+        
+    StaffProfileEntity staff = staffProfileRepository.findById(staffProfileId)
+            .orElseThrow(() -> new RuntimeException("Staff profile not found"));
+
+    ServiceEntity service = serviceRepository.findById(serviceId)
+            .orElseThrow(() -> new RuntimeException("Service not found"));
+
+    staff.getServices().add(service);
+    staffProfileRepository.save(staff);
     }
 
 }

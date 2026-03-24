@@ -9,6 +9,7 @@ import com.ciccone.backend.dto.ServiceMapper;
 import com.ciccone.backend.dto.ServiceRequestDto;
 import com.ciccone.backend.dto.ServiceResponseDto;
 import com.ciccone.backend.entity.ServiceEntity;
+import com.ciccone.backend.exception.ResourceNotFoundException;
 import com.ciccone.backend.repository.ServiceRepository;
 
 @Service
@@ -39,7 +40,7 @@ public class ServiceService {
 }
 
     public ServiceResponseDto getServiceById(Long id) {
-        return serviceMapper.toResponseDto(serviceRepository.findById(id).orElseThrow(() -> new RuntimeException("Service not found")));
+        return serviceMapper.toResponseDto(serviceRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Service not found")));
     }
 
     public ServiceResponseDto updateService(Long id, ServiceRequestDto updatedService) {
@@ -47,7 +48,7 @@ public class ServiceService {
         ServiceEntity serviceEntity = serviceMapper.toEntity(updatedService);
 
         ServiceEntity existingService = serviceRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Service not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Service not found"));
 
         existingService.setName(serviceEntity.getName());
         existingService.setDescription(serviceEntity.getDescription());
@@ -61,7 +62,7 @@ public class ServiceService {
 
     public void deleteService(Long id) {
             ServiceEntity service = serviceRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Service not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("Service not found"));
             serviceRepository.delete(service);
 }
 

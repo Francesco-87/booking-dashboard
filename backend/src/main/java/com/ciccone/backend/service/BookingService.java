@@ -12,8 +12,12 @@ import com.ciccone.backend.entity.BookingEntity;
 import com.ciccone.backend.entity.BookingStatus;
 import com.ciccone.backend.entity.ServiceEntity;
 import com.ciccone.backend.entity.StaffProfileEntity;
+import com.ciccone.backend.exception.ResourceNotFoundException;
 import com.ciccone.backend.repository.BookingRepository;
 import com.ciccone.backend.repository.StaffProfileRepository;
+
+import jakarta.annotation.Resource;
+
 import com.ciccone.backend.repository.ServiceRepository;
 
 
@@ -39,13 +43,20 @@ public class BookingService {
         bookingEntity.setUpdatedAt(now);
         bookingEntity.setStatus(BookingStatus.REQUESTED);
         StaffProfileEntity staffProfile = staffProfileRepository.findById(bookingRequestDto.getStaffProfileId())
-        .orElseThrow(() -> new RuntimeException("Staff profile not found"));
+        .orElseThrow(() -> new ResourceNotFoundException("Staff profile not found"));
 
         ServiceEntity service = serviceRepository.findById(bookingRequestDto.getServiceId())
-        .orElseThrow(() -> new RuntimeException("Service not found"));
+        .orElseThrow(() -> new ResourceNotFoundException("Service not found"));
             if (!staffProfile.getServices().contains(service)) {
             throw new RuntimeException("Staff cannot perform this service");
-}
+            }
+        if (bookingRepository.existsByStaffProfileIdAndStartTimeLessThanAndEndTimeGreaterThan(
+                bookingEntity.getStaffProfileId(),
+                bookingEntity.getEndTime(),
+                bookingEntity.getStartTime()            
+        )) {
+            throw new RuntimeException("Booking overlaps with existing booking");
+        }
 
         return bookingMapper.toResponseDto(bookingRepository.save(bookingEntity));
     }
@@ -57,7 +68,7 @@ public class BookingService {
     }
 
     public BookingResponseDto getBookingById(Long id) {
-        return bookingMapper.toResponseDto(bookingRepository.findById(id).orElseThrow(() -> new RuntimeException("Booking not found")));
+        return bookingMapper.toResponseDto(bookingRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Booking not found")));
     }
 
     public BookingResponseDto updateBooking(Long id, BookingRequestDto updatedBooking) {
@@ -65,7 +76,7 @@ public class BookingService {
         BookingEntity bookingEntity = bookingMapper.toEntity(updatedBooking);
 
         BookingEntity existingBooking = bookingRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Booking not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Booking not found"));
 
         existingBooking.setServiceId(bookingEntity.getServiceId());
         existingBooking.setStaffProfileId(bookingEntity.getStaffProfileId());
@@ -76,13 +87,35 @@ public class BookingService {
         existingBooking.setNotes(bookingEntity.getNotes());
         existingBooking.setUpdatedAt(OffsetDateTime.now());
 
+         StaffProfileEntity staffProfile = staffProfileRepository.findById(updatedBooking.getStaffProfileId())
+        .orElseThrow(() -> new ResourceNotFoundException("Staff profile not found"));
+
+        ServiceEntity service = serviceRepository.findById(updatedBooking.getServiceId())
+        .orElseThrow(() -> new ResourceNotFoundException("Service not found"));
+            if (!staffProfile.getServices().contains(service)) {
+            throw new RuntimeException("Staff cannot perform this service");
+            }
+
+        if (bookingRepository.existsByStaffProfileIdAndStartTimeLessThanAndEndTimeGreaterThanAndIdNot(
+                existingBooking.getStaffProfileId(),
+                existingBooking.getEndTime(),
+                existingBooking.getStartTime(),
+                existingBooking.getId()            
+        )) {
+            throw new RuntimeException("Booking overlaps with existing booking");
+        }
+
         return bookingMapper.toResponseDto(bookingRepository.save(existingBooking));
     }
 
     public void deleteBooking(Long id) {
         BookingEntity booking = bookingRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Booking not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Booking not found"));
         bookingRepository.delete(booking);
     }
+
+
+    //Helper method to check for overlapping bookings
+     
 
 }

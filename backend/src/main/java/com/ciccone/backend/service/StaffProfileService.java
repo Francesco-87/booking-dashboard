@@ -9,6 +9,7 @@ import com.ciccone.backend.dto.StaffProfileRequestDto;
 import com.ciccone.backend.dto.StaffProfileResponseDto;
 import com.ciccone.backend.entity.ServiceEntity;
 import com.ciccone.backend.entity.StaffProfileEntity;
+import com.ciccone.backend.exception.ResourceNotFoundException;
 import com.ciccone.backend.repository.ServiceRepository;
 import com.ciccone.backend.repository.StaffProfileRepository;
 
@@ -40,7 +41,7 @@ public class StaffProfileService {
     }
 
     public StaffProfileResponseDto getStaffProfileById(Long id) {
-        return staffProfileMapper.toResponseDto(staffProfileRepository.findById(id).orElseThrow(() -> new RuntimeException("Staff profile not found")));
+        return staffProfileMapper.toResponseDto(staffProfileRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Staff profile not found")));
     }
 
     public StaffProfileResponseDto updateStaffProfile(Long id, StaffProfileRequestDto updatedStaffProfile) {
@@ -48,7 +49,7 @@ public class StaffProfileService {
         StaffProfileEntity staffEntity = staffProfileMapper.toEntity(updatedStaffProfile);
 
         StaffProfileEntity existingStaffProfile = staffProfileRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Staff profile not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Staff profile not found"));
 
         existingStaffProfile.setUserId(staffEntity.getUserId());
         existingStaffProfile.setDisplayName(staffEntity.getDisplayName());
@@ -62,7 +63,7 @@ public class StaffProfileService {
 
     public void deleteStaffProfile(Long id) {
         StaffProfileEntity existingStaffProfile = staffProfileRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Staff profile not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Staff profile not found"));
         staffProfileRepository.delete(existingStaffProfile);
 
     }
@@ -73,10 +74,10 @@ public class StaffProfileService {
     public void addServiceToStaffProfile( Long staffProfileId, Long serviceId) {
         
     StaffProfileEntity staff = staffProfileRepository.findById(staffProfileId)
-            .orElseThrow(() -> new RuntimeException("Staff profile not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("Staff profile not found"));
 
     ServiceEntity service = serviceRepository.findById(serviceId)
-            .orElseThrow(() -> new RuntimeException("Service not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("Service not found"));
 
     staff.getServices().add(service);
     staffProfileRepository.save(staff);

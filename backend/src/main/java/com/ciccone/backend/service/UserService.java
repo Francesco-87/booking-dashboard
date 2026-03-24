@@ -9,6 +9,7 @@ import com.ciccone.backend.dto.UserMapper;
 import com.ciccone.backend.dto.UserRequestDto;
 import com.ciccone.backend.dto.UserResponseDto;
 import com.ciccone.backend.entity.UserEntity;
+import com.ciccone.backend.exception.ResourceNotFoundException;
 import com.ciccone.backend.repository.UserRepository;
 
 @Service
@@ -38,7 +39,7 @@ public class UserService {
     }
 
     public UserResponseDto getUserById(Long id){
-        return userMapper.toResponseDto(userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found")));
+        return userMapper.toResponseDto(userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User not found")));
     }
 
     public UserResponseDto updateUser(Long id, UserRequestDto updatedUser) {
@@ -46,7 +47,7 @@ public class UserService {
         UserEntity userEntity = userMapper.toEntity(updatedUser);
 
         UserEntity existingUser = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
         existingUser.setFullName(userEntity.getFullName());
         existingUser.setEmail(userEntity.getEmail());
@@ -59,7 +60,7 @@ public class UserService {
 
     public void deleteUser(Long id) {
         UserEntity existingUser = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
         userRepository.delete(existingUser);
     }
 

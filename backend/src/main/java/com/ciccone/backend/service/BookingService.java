@@ -12,11 +12,11 @@ import com.ciccone.backend.entity.BookingEntity;
 import com.ciccone.backend.entity.BookingStatus;
 import com.ciccone.backend.entity.ServiceEntity;
 import com.ciccone.backend.entity.StaffProfileEntity;
+import com.ciccone.backend.exception.ConflictException;
+import com.ciccone.backend.exception.BadRequestException;
 import com.ciccone.backend.exception.ResourceNotFoundException;
 import com.ciccone.backend.repository.BookingRepository;
 import com.ciccone.backend.repository.StaffProfileRepository;
-
-import jakarta.annotation.Resource;
 
 import com.ciccone.backend.repository.ServiceRepository;
 
@@ -36,78 +36,66 @@ public class BookingService {
         this.serviceRepository = serviceRepository;
     }
 
+    // Create booking - validate input, check for conflicts, and return created booking
     public BookingResponseDto createBooking(BookingRequestDto bookingRequestDto) {
-        BookingEntity bookingEntity = bookingMapper.toEntity(bookingRequestDto);
-        OffsetDateTime now = OffsetDateTime.now();
-        bookingEntity.setCreatedAt(now);
-        bookingEntity.setUpdatedAt(now);
-        bookingEntity.setStatus(BookingStatus.REQUESTED);
-        StaffProfileEntity staffProfile = staffProfileRepository.findById(bookingRequestDto.getStaffProfileId())
-        .orElseThrow(() -> new ResourceNotFoundException("Staff profile not found"));
+    validateTime(bookingRequestDto.getStartTime(), bookingRequestDto.getEndTime());
+    validateStaffAndService(bookingRequestDto.getStaffProfileId(), bookingRequestDto.getServiceId());
+    validateNoOverlap(
+            bookingRequestDto.getStaffProfileId(),
+            bookingRequestDto.getStartTime(),
+            bookingRequestDto.getEndTime()
+    );
+    BookingEntity bookingEntity = bookingMapper.toEntity(bookingRequestDto);
+    OffsetDateTime now = OffsetDateTime.now();
+    bookingEntity.setCreatedAt(now);
+    bookingEntity.setUpdatedAt(now);
+    bookingEntity.setStatus(BookingStatus.REQUESTED);
 
-        ServiceEntity service = serviceRepository.findById(bookingRequestDto.getServiceId())
-        .orElseThrow(() -> new ResourceNotFoundException("Service not found"));
-            if (!staffProfile.getServices().contains(service)) {
-            throw new RuntimeException("Staff cannot perform this service");
-            }
-        if (bookingRepository.existsByStaffProfileIdAndStartTimeLessThanAndEndTimeGreaterThan(
-                bookingEntity.getStaffProfileId(),
-                bookingEntity.getEndTime(),
-                bookingEntity.getStartTime()            
-        )) {
-            throw new RuntimeException("Booking overlaps with existing booking");
-        }
-
-        return bookingMapper.toResponseDto(bookingRepository.save(bookingEntity));
-    }
+    return bookingMapper.toResponseDto(bookingRepository.save(bookingEntity));
+}
     
+    // Get all bookings 
     public List<BookingResponseDto> getAllBookings() {
         return bookingRepository.findAll().stream()
             .map(bookingMapper::toResponseDto)
             .toList();
     }
 
+    // Get booking by ID - return 404 if not found
     public BookingResponseDto getBookingById(Long id) {
-        return bookingMapper.toResponseDto(bookingRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Booking not found")));
+    BookingEntity booking = bookingRepository.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Booking not found"));
+
+    return bookingMapper.toResponseDto(booking);
     }
 
+    // Update booking - only allow updating certain fields and validate constraints
     public BookingResponseDto updateBooking(Long id, BookingRequestDto updatedBooking) {
+    BookingEntity existingBooking = bookingRepository.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Booking not found"));
 
-        BookingEntity bookingEntity = bookingMapper.toEntity(updatedBooking);
+    validateTime(updatedBooking.getStartTime(), updatedBooking.getEndTime());
+    validateStaffAndService(updatedBooking.getStaffProfileId(), updatedBooking.getServiceId());
+    validateNoOverlapExcludingCurrent(
+            existingBooking.getId(),
+            updatedBooking.getStaffProfileId(),
+            updatedBooking.getStartTime(),
+            updatedBooking.getEndTime()
+    );
 
-        BookingEntity existingBooking = bookingRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Booking not found"));
+    existingBooking.setServiceId(updatedBooking.getServiceId());
+    existingBooking.setStaffProfileId(updatedBooking.getStaffProfileId());
+    existingBooking.setCustomerName(updatedBooking.getCustomerName());
+    existingBooking.setCustomerEmail(updatedBooking.getCustomerEmail());
+    existingBooking.setStartTime(updatedBooking.getStartTime());
+    existingBooking.setEndTime(updatedBooking.getEndTime());
+    existingBooking.setNotes(updatedBooking.getNotes());
+    existingBooking.setUpdatedAt(OffsetDateTime.now());
 
-        existingBooking.setServiceId(bookingEntity.getServiceId());
-        existingBooking.setStaffProfileId(bookingEntity.getStaffProfileId());
-        existingBooking.setCustomerName(bookingEntity.getCustomerName());
-        existingBooking.setCustomerEmail(bookingEntity.getCustomerEmail());
-        existingBooking.setStartTime(bookingEntity.getStartTime());
-        existingBooking.setEndTime(bookingEntity.getEndTime());
-        existingBooking.setNotes(bookingEntity.getNotes());
-        existingBooking.setUpdatedAt(OffsetDateTime.now());
-
-         StaffProfileEntity staffProfile = staffProfileRepository.findById(updatedBooking.getStaffProfileId())
-        .orElseThrow(() -> new ResourceNotFoundException("Staff profile not found"));
-
-        ServiceEntity service = serviceRepository.findById(updatedBooking.getServiceId())
-        .orElseThrow(() -> new ResourceNotFoundException("Service not found"));
-            if (!staffProfile.getServices().contains(service)) {
-            throw new RuntimeException("Staff cannot perform this service");
-            }
-
-        if (bookingRepository.existsByStaffProfileIdAndStartTimeLessThanAndEndTimeGreaterThanAndIdNot(
-                existingBooking.getStaffProfileId(),
-                existingBooking.getEndTime(),
-                existingBooking.getStartTime(),
-                existingBooking.getId()            
-        )) {
-            throw new RuntimeException("Booking overlaps with existing booking");
-        }
-
-        return bookingMapper.toResponseDto(bookingRepository.save(existingBooking));
+    return bookingMapper.toResponseDto(bookingRepository.save(existingBooking));
     }
 
+    // Delete booking - return 404 if not found
     public void deleteBooking(Long id) {
         BookingEntity booking = bookingRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Booking not found"));
@@ -115,7 +103,55 @@ public class BookingService {
     }
 
 
-    //Helper method to check for overlapping bookings
-     
+    //Helper methods 
+     private void validateTime(OffsetDateTime startTime, OffsetDateTime endTime) {
+        OffsetDateTime now = OffsetDateTime.now();
+        if (startTime.isBefore(now)) {
+            throw new BadRequestException("Start time cannot be in the past");
+        }
+        if (!endTime.isAfter(startTime)) {
+            throw new BadRequestException("End time must be after start time");
+        }
+     }
 
+
+     private void  validateStaffAndService(Long staffProfileId, Long serviceId) {
+         StaffProfileEntity staffProfile = staffProfileRepository.findById(staffProfileId)
+        .orElseThrow(() -> new ResourceNotFoundException("Staff profile not found"));
+
+        ServiceEntity service = serviceRepository.findById(serviceId)
+        .orElseThrow(() -> new ResourceNotFoundException("Service not found"));
+
+        if (!staffProfile.getServices().contains(service)) {
+            throw new BadRequestException("Staff cannot perform this service");
+            }
+     }
+
+    private void validateNoOverlap(Long staffProfileId, OffsetDateTime startTime, OffsetDateTime endTime) {
+        if (bookingRepository.existsByStaffProfileIdAndStartTimeLessThanAndEndTimeGreaterThan(
+                staffProfileId,
+                endTime,
+                startTime            
+        )) {
+            throw new ConflictException("Booking overlaps with existing booking");
+        }
+    }
+    private void validateNoOverlapExcludingCurrent(Long bookingId, Long staffProfileId, OffsetDateTime startTime, OffsetDateTime endTime) {
+        if (bookingRepository.existsByStaffProfileIdAndStartTimeLessThanAndEndTimeGreaterThanAndIdNot(
+            staffProfileId,
+            endTime,
+            startTime,
+            bookingId
+                           
+        )) {
+            throw new ConflictException("Booking overlaps with existing booking");
+        }
+    }
+       
 }
+
+
+ 
+        
+
+       

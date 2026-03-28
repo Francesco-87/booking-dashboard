@@ -17,6 +17,6 @@ public interface BookingRepository extends JpaRepository<BookingEntity, Long> {
     Long staffProfileId,
     OffsetDateTime endTime,
     OffsetDateTime startTime,
-    Long currentBookingId
+    Long bookingId    
 );
 }

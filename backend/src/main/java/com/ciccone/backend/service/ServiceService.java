@@ -23,48 +23,47 @@ public class ServiceService {
         this.serviceMapper = serviceMapper;
     }
 
-    
-
     public ServiceResponseDto createService(ServiceRequestDto serviceRequestDto) {
-         ServiceEntity serviceEntity = serviceMapper.toEntity(serviceRequestDto);
+        ServiceEntity service = serviceMapper.toEntity(serviceRequestDto);
+
         OffsetDateTime now = OffsetDateTime.now();
-        serviceEntity.setCreatedAt(now);
-        serviceEntity.setUpdatedAt(now);
-        return serviceMapper.toResponseDto(serviceRepository.save(serviceEntity));
+        service.setCreatedAt(now);
+        service.setUpdatedAt(now);
+
+        return serviceMapper.toResponseDto(serviceRepository.save(service));
     }
 
     public List<ServiceResponseDto> getAllServices() {
-         return serviceRepository.findAll().stream()
-            .map(serviceMapper::toResponseDto)
-            .toList();
-}
+        return serviceRepository.findAll().stream()
+                .map(serviceMapper::toResponseDto)
+                .toList();
+    }
 
     public ServiceResponseDto getServiceById(Long id) {
-        return serviceMapper.toResponseDto(serviceRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Service not found")));
+        ServiceEntity service = serviceRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Service not found"));
+
+        return serviceMapper.toResponseDto(service);
     }
 
     public ServiceResponseDto updateService(Long id, ServiceRequestDto updatedService) {
-
-        ServiceEntity serviceEntity = serviceMapper.toEntity(updatedService);
-
         ServiceEntity existingService = serviceRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Service not found"));
 
-        existingService.setName(serviceEntity.getName());
-        existingService.setDescription(serviceEntity.getDescription());
-        existingService.setDurationMinutes(serviceEntity.getDurationMinutes());
-        existingService.setPriceCents(serviceEntity.getPriceCents());
-        existingService.setIsActive(serviceEntity.getIsActive());
+        existingService.setName(updatedService.getName());
+        existingService.setDescription(updatedService.getDescription());
+        existingService.setDurationMinutes(updatedService.getDurationMinutes());
+        existingService.setPriceCents(updatedService.getPriceCents());
+        existingService.setIsActive(updatedService.getIsActive());
         existingService.setUpdatedAt(OffsetDateTime.now());
 
         return serviceMapper.toResponseDto(serviceRepository.save(existingService));
-}
+    }
 
     public void deleteService(Long id) {
-            ServiceEntity service = serviceRepository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Service not found"));
-            serviceRepository.delete(service);
-}
+        ServiceEntity service = serviceRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Service not found"));
 
-    
+        serviceRepository.delete(service);
+    }
 }

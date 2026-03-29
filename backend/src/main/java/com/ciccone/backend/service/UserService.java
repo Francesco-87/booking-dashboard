@@ -16,56 +16,60 @@ import com.ciccone.backend.repository.UserRepository;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final UserMapper userMapper;        
+    private final UserMapper userMapper;
 
     public UserService(UserRepository userRepository, UserMapper userMapper) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
     }
 
-    public UserResponseDto createUser(UserRequestDto userRequestDto){
-        UserEntity userEntity = userMapper.toEntity(userRequestDto);
+    public UserResponseDto createUser(UserRequestDto userRequestDto) {
+        UserEntity user = userMapper.toEntity(userRequestDto);
+
         OffsetDateTime now = OffsetDateTime.now();
-        userEntity.setCreatedAt(now);
-        userEntity.setUpdatedAt(now);
-        return userMapper.toResponseDto(userRepository.save(userEntity));
-       
+        user.setCreatedAt(now);
+        user.setUpdatedAt(now);
+
+        return userMapper.toResponseDto(userRepository.save(user));
     }
 
-    public List<UserResponseDto> getAllUsers(){
+    public List<UserResponseDto> getAllUsers() {
         return userRepository.findAll().stream()
-            .map(userMapper::toResponseDto)
-            .toList();
+                .map(userMapper::toResponseDto)
+                .toList();
     }
 
-    public UserResponseDto getUserById(Long id){
-        return userMapper.toResponseDto(userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User not found")));
+    public UserResponseDto getUserById(Long id) {
+        UserEntity user = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        return userMapper.toResponseDto(user);
     }
 
     public UserResponseDto updateUser(Long id, UserRequestDto updatedUser) {
-
-        UserEntity userEntity = userMapper.toEntity(updatedUser);
-
         UserEntity existingUser = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
-        existingUser.setFullName(userEntity.getFullName());
-        existingUser.setEmail(userEntity.getEmail());
-        existingUser.setPasswordHash(userEntity.getPasswordHash());
-        existingUser.setRole(userEntity.getRole());
-        if (updatedUser.getIsActive() != null) {existingUser.setIsActive(updatedUser.getIsActive());}    
-        existingUser.setUpdatedAt(OffsetDateTime.now());   
+        existingUser.setFullName(updatedUser.getFullName());
+        existingUser.setEmail(updatedUser.getEmail());
+        existingUser.setPasswordHash(updatedUser.getPasswordHash());
+        existingUser.setRole(updatedUser.getRole());
+
+        if (updatedUser.getIsActive() != null) {
+            existingUser.setIsActive(updatedUser.getIsActive());
+        }
+
+        existingUser.setUpdatedAt(OffsetDateTime.now());
+
         return userMapper.toResponseDto(userRepository.save(existingUser));
     }
 
     public void deleteUser(Long id) {
         UserEntity existingUser = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
         userRepository.delete(existingUser);
     }
-
-
-
 }
 
     

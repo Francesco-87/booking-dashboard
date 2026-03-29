@@ -11,12 +11,17 @@ public class UserMapper {
         if (dto == null) {
             return null;
         }
+
         UserEntity entity = new UserEntity();
         entity.setFullName(dto.getFullName());
         entity.setEmail(dto.getEmail());
         entity.setPasswordHash(dto.getPasswordHash());
         entity.setRole(dto.getRole());
-        if (dto.getIsActive() != null) { entity.setIsActive(dto.getIsActive());}
+
+        if (dto.getIsActive() != null) {
+            entity.setIsActive(dto.getIsActive());
+        }
+
         return entity;
     }
 
@@ -24,15 +29,15 @@ public class UserMapper {
         if (entity == null) {
             return null;
         }
-        UserResponseDto dto = new UserResponseDto();
-        dto.setId(entity.getId());
-        dto.setFullName(entity.getFullName());
-        dto.setEmail(entity.getEmail());
-        dto.setRole(entity.getRole());
-        dto.setIsActive(entity.getIsActive() );
-        dto.setCreatedAt(entity.getCreatedAt());
-        dto.setUpdatedAt(entity.getUpdatedAt());
-        return dto;
+
+        return new UserResponseDto(
+                entity.getId(),
+                entity.getFullName(),
+                entity.getEmail(),
+                entity.getRole(),
+                entity.getIsActive(),
+                entity.getCreatedAt(),
+                entity.getUpdatedAt()
+        );
     }
-    
 }

@@ -6,15 +6,19 @@ import com.ciccone.backend.entity.StaffProfileEntity;
 @Component
 public class StaffProfileMapper {
 
-
     public StaffProfileEntity toEntity(StaffProfileRequestDto dto) {
         if (dto == null) {
             return null;
         }
+
         StaffProfileEntity entity = new StaffProfileEntity();
         entity.setUserId(dto.getUserId());
         entity.setDisplayName(dto.getDisplayName());
-         if (dto.getIsActive() != null) { entity.setIsActive(dto.getIsActive());}
+
+        if (dto.getIsActive() != null) {
+            entity.setIsActive(dto.getIsActive());
+        }
+
         return entity;
     }
 
@@ -22,14 +26,14 @@ public class StaffProfileMapper {
         if (entity == null) {
             return null;
         }
-        StaffProfileResponseDto dto = new StaffProfileResponseDto();
-        dto.setId(entity.getId());
-        dto.setUserId(entity.getUserId());
-        dto.setDisplayName(entity.getDisplayName());
-        dto.setIsActive(entity.getIsActive() );
-        dto.setCreatedAt(entity.getCreatedAt());
-        dto.setUpdatedAt(entity.getUpdatedAt());
-        return dto;
+
+        return new StaffProfileResponseDto(
+                entity.getId(),
+                entity.getUserId(),
+                entity.getDisplayName(),
+                entity.getIsActive(),
+                entity.getCreatedAt(),
+                entity.getUpdatedAt()
+        );
     }
-    
 }

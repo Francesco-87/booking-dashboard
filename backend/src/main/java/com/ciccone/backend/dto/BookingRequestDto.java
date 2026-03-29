@@ -10,6 +10,7 @@ public class BookingRequestDto {
     private Long serviceId;  
     @NotNull
     private Long staffProfileId;
+    @Email
     @NotBlank
     private String customerName;
     @Email

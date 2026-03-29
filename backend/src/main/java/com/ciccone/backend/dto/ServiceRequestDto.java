@@ -7,8 +7,10 @@ public class ServiceRequestDto {
     @NotBlank
     private String name;
     private String description;
+    @NotNull
     @Positive
     private Integer durationMinutes;
+    @NotNull
     @PositiveOrZero
     private Integer priceCents;
     private Boolean isActive;

@@ -12,6 +12,7 @@ public class BookingMapper {
         if (dto == null) {
             return null;
         }
+
         BookingEntity entity = new BookingEntity();
         entity.setServiceId(dto.getServiceId());
         entity.setStaffProfileId(dto.getStaffProfileId());
@@ -20,6 +21,7 @@ public class BookingMapper {
         entity.setStartTime(dto.getStartTime());
         entity.setEndTime(dto.getEndTime());
         entity.setNotes(dto.getNotes());
+
         return entity;
     }
 
@@ -27,19 +29,19 @@ public class BookingMapper {
         if (entity == null) {
             return null;
         }
-        BookingResponseDto dto = new BookingResponseDto();
-        dto.setId(entity.getId());
-        dto.setServiceId(entity.getServiceId());
-        dto.setStaffProfileId(entity.getStaffProfileId());
-        dto.setCustomerName(entity.getCustomerName());
-        dto.setCustomerEmail(entity.getCustomerEmail());
-        dto.setStartTime(entity.getStartTime());
-        dto.setEndTime(entity.getEndTime());
-        dto.setStatus(entity.getStatus());
-        dto.setNotes(entity.getNotes());
-        dto.setCreatedAt(entity.getCreatedAt());
-        dto.setUpdatedAt(entity.getUpdatedAt());
-        return dto;
+
+        return new BookingResponseDto(
+                entity.getId(),
+                entity.getServiceId(),
+                entity.getStaffProfileId(),
+                entity.getCustomerName(),
+                entity.getCustomerEmail(),
+                entity.getStartTime(),
+                entity.getEndTime(),
+                entity.getStatus(),
+                entity.getNotes(),
+                entity.getCreatedAt(),
+                entity.getUpdatedAt()
+        );
     }
-    
 }

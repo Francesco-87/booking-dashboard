@@ -3,6 +3,7 @@ package com.ciccone.backend.controller;
 
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import com.ciccone.backend.dto.UserRequestDto;
@@ -22,6 +23,7 @@ public class UserController {
     }
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public UserResponseDto createUser(@RequestBody @Valid UserRequestDto userRequestDto) {
         return userService.createUser(userRequestDto);
     }
@@ -41,8 +43,9 @@ public class UserController {
         return userService.updateUser(id, updatedUser);
     }
 
-    @DeleteMapping("/{id}")
+   @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteUser(@PathVariable Long id) {
-        userService.deleteUser(id);
-    }
+    userService.deleteUser(id);
+}
 }

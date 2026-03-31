@@ -15,6 +15,7 @@ public class SecurityConfig {
         http
             // APIs + Postman: CSRF off (we’ll do proper JWT later)
             .csrf(csrf -> csrf.disable())
+            .cors(Customizer.withDefaults())
 
             // Allow your POST for now (so you can test)
             .authorizeHttpRequests(auth -> auth
@@ -30,6 +31,8 @@ public class SecurityConfig {
 
             // Enable Basic Auth (Postman can use this too)
             .httpBasic(Customizer.withDefaults());
+
+            
 
         return http.build();
     }

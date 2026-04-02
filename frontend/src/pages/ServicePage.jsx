@@ -1,4 +1,5 @@
 import { getServices } from "../services/serviceApi"
+import { deactivateService } from "../services/serviceApi"
 import  ServiceForm  from "../components/ServiceForm"
 import { useState, useEffect } from "react"
 
@@ -14,6 +15,11 @@ function ServicePage() {
         loadServices()
     }, [])
 
+    async function handleDeactivate(serviceData) {
+        await deactivateService(serviceData)
+        loadServices()
+    }
+   
 
   return (
     <div>
@@ -22,7 +28,10 @@ function ServicePage() {
         {services.map(service => (
           <div key={service.id}>
             <h2>{service.name}</h2>
-            <p>{service.description}</p>
+            <p>Description: {service.description}</p>
+            <p>Duration: {service.durationMinutes} minutes</p>
+            <p>Price: ${ (service.priceCents / 100).toFixed(2) }</p>
+            <button onClick={() => handleDeactivate(service)}>Deactivate</button>
           </div>
         ))}
 

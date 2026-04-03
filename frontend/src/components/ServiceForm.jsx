@@ -1,7 +1,7 @@
-import { useState } from "react"
-import { createService } from "../services/serviceApi"   
+import { useEffect, useState } from "react"
+ 
 
-function ServiceForm({ onServiceCreated }) {
+function ServiceForm({ onSubmit, initialData }) {
 
     const [formData, setFormData] = useState({
         name: '',
@@ -10,12 +10,18 @@ function ServiceForm({ onServiceCreated }) {
         priceCents: ''
     });
 
+    useEffect(() => {
+        if (initialData) {
+            setFormData(initialData)
+        }
+    }, [initialData])
+
    async function handleSubmit(e) {
     e.preventDefault()
     console.log(formData)
-    const result = await createService(formData)
+    const result = await onSubmit(formData)
     console.log(result)
-    onServiceCreated()
+    
 
     setFormData({
         name: '',

@@ -25,6 +25,7 @@ async function createService(serviceData) {
 async function deactivateService(serviceData) {
   try {
     const response = await fetch(`http://localhost:8080/api/services/${serviceData.id}`, {
+    
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json'
@@ -37,5 +38,21 @@ async function deactivateService(serviceData) {
   }
 }
 
+async function activateService(serviceData) {
+  try {
+    const response = await fetch(`http://localhost:8080/api/services/${serviceData.id}`, {
+    
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ ...serviceData, isActive: true })
+    })
+    return await response.json()
+  } catch (error) {
+    console.error('Error activating service:', error)
+  }
+}
 
-export { getServices, createService, deactivateService }
+
+export { getServices, createService, deactivateService, activateService }

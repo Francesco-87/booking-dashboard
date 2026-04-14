@@ -14,6 +14,7 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/staff-profiles")
+@CrossOrigin(origins = "http://localhost:5173")
 public class StaffProfileController {
 
     private final StaffProfileService staffProfileService;

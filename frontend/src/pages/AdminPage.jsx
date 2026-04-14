@@ -15,8 +15,8 @@ function AdminPage() {
       </div>
 
       <div>
-        <button disabled>
-          Manage Staff (coming soon)
+        <button onClick={() => navigate("/admin/staff")}>
+          Manage Staff 
         </button>
       </div>
 

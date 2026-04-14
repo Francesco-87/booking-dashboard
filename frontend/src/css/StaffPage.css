@@ -1,0 +1,13 @@
+import {
+    getStaff,
+    createStaff,
+    deactivateStaff,
+    activateStaff,
+    updateStaff
+} from "../services/staffApi"
+
+function StaffPage() {
+    // Component code here
+}
+
+export default StaffPage 

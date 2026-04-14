@@ -1,65 +1,124 @@
-import { useEffect, useState } from "react"
- 
+import { useState, useEffect } from "react"
 
-function ServiceForm({ onSubmit, initialData }) {
+function ServiceForm({
+  onSubmit,
+  initialData = null,
+  submitLabel = "Create Service",
+  title = "Create Service",
+}) {
+  const emptyForm = {
+    name: "",
+    description: "",
+    durationMinutes: "",
+    priceCents: "",
+  }
 
-    const [formData, setFormData] = useState({
-        name: '',
-        description: '',
-        durationMinutes: '',
-        priceCents: ''
-    });
+  const [formData, setFormData] = useState(emptyForm)
 
-    useEffect(() => {
-        if (initialData) {
-            setFormData(initialData)
-        }
-    }, [initialData])
+  useEffect(() => {
+    if (initialData) {
+      setFormData({
+        id: initialData.id,
+        name: initialData.name ?? "",
+        description: initialData.description ?? "",
+        durationMinutes: initialData.durationMinutes ?? "",
+        priceCents: initialData.priceCents ?? "",
+        isActive: initialData.isActive,
+      })
+    } else {
+      setFormData(emptyForm)
+    }
+  }, [initialData])
 
-   async function handleSubmit(e) {
+  function handleChange(e) {
+    const { name, value, type } = e.target
+
+    setFormData((prev) => ({
+      ...prev,
+      [name]: type === "number" ? (value === "" ? "" : Number(value)) : value,
+    }))
+  }
+
+  async function handleSubmit(e) {
     e.preventDefault()
-    console.log(formData)
-    const result = await onSubmit(formData)
-    console.log(result)
-    
+    await onSubmit(formData)
 
-    setFormData({
-        name: '',
-        description: '',
-        durationMinutes: '',
-        priceCents: ''
-    })
-}
-    
-
+    if (!initialData) {
+      setFormData(emptyForm)
+    }
+  }
 
   return (
-    <div>
-      <h2>Service Form</h2>
-      <div className="form-group">
-        <form onSubmit={handleSubmit}>
-            <div>
-                <label htmlFor="name">Name:</label>
-                <input type="text" id="name" name="name" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} />
-            </div>
-            <div>
-                <label htmlFor="description">Description:</label>
-                <input type="text" id="description" name="description" value={formData.description} onChange={(e) => setFormData({...formData, description: e.target.value})} />
-            </div>
-            <div>
-                <label htmlFor="durationMinutes">Duration (minutes):</label>
-                <input type="number" id="durationMinutes" name="durationMinutes" value={formData.durationMinutes} onChange={(e) => setFormData({...formData, durationMinutes: Number(e.target.value)})} />
-            </div>
-            <div>
-                <label htmlFor="priceCents">priceCents:</label>
-                <input type="number" id="priceCents" name="priceCents" value={formData.priceCents} onChange={(e) => setFormData({...formData, priceCents: Number(e.target.value)})} />
-            </div>
-            
-            <button type="submit" >Submit</button>
-        </form>
-      </div>
+    <div className="service-form-wrapper">
+      <h2>{title}</h2>
+
+      <form className="service-form" onSubmit={handleSubmit}>
+        <div className="form-field">
+          <label htmlFor="name">Service Name</label>
+          <input
+            type="text"
+            id="name"
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+            required
+            maxLength={100}
+            placeholder="e.g. Consultation"
+          />
+        </div>
+
+        <div className="form-field">
+          <label htmlFor="description">Description</label>
+          <textarea
+            id="description"
+            name="description"
+            value={formData.description}
+            onChange={handleChange}
+            rows="3"
+            placeholder="Short description of the service"
+          />
+        </div>
+
+        <div className="form-row">
+          <div className="form-field">
+            <label htmlFor="durationMinutes">Duration (minutes)</label>
+            <input
+              type="number"
+              id="durationMinutes"
+              name="durationMinutes"
+              value={formData.durationMinutes}
+              onChange={handleChange}
+              required
+              min="1"
+              step="1"
+              placeholder="60"
+            />
+          </div>
+
+          <div className="form-field">
+            <label htmlFor="priceCents">Price (cents)</label>
+            <input
+              type="number"
+              id="priceCents"
+              name="priceCents"
+              value={formData.priceCents}
+              onChange={handleChange}
+              required
+              min="0"
+              step="1"
+              placeholder="5000"
+            />
+          </div>
+        </div>
+
+        <div className="form-actions">
+          <button type="submit" className="btn btn--primary">
+            {submitLabel}
+          </button>
+        </div>
+      </form>
     </div>
   )
 }
 
-export default ServiceForm 
+export default ServiceForm

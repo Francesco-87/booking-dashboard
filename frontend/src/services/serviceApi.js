@@ -54,5 +54,19 @@ async function activateService(serviceData) {
   }
 }
 
+async function updateService(serviceData) {
+  try {
+    const response = await fetch(`http://localhost:8080/api/services/${serviceData.id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(serviceData)
+    })
+    return await response.json()
+  } catch (error) {
+    console.error('Error updating service:', error)
+  }
+}
 
-export { getServices, createService, deactivateService, activateService }
+export { getServices, createService, deactivateService, activateService, updateService }

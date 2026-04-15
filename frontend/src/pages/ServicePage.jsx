@@ -87,7 +87,7 @@ function ServicePage() {
                 type="button"
                 className="btn btn--secondary"
                 onClick={() => setSelectedService(service)}
-              >
+                >
                 Edit
               </button>
 

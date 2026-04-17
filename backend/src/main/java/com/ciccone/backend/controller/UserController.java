@@ -6,8 +6,9 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import com.ciccone.backend.dto.UserRequestDto;
+import com.ciccone.backend.dto.UserCreateRequestDto;
 import com.ciccone.backend.dto.UserResponseDto;
+import com.ciccone.backend.dto.UserUpdateRequestDto;
 import com.ciccone.backend.service.UserService;
 
 import jakarta.validation.Valid;
@@ -25,7 +26,7 @@ public class UserController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public UserResponseDto createUser(@RequestBody @Valid UserRequestDto userRequestDto) {
+    public UserResponseDto createUser(@RequestBody @Valid UserCreateRequestDto userRequestDto) {
         return userService.createUser(userRequestDto);
     }
         
@@ -40,7 +41,11 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public UserResponseDto updateUser(@PathVariable Long id, @RequestBody @Valid UserRequestDto updatedUser) {
+    public UserResponseDto updateUser(@PathVariable Long id, @RequestBody @Valid UserUpdateRequestDto updatedUser) {
+        return userService.updateUser(id, updatedUser);
+    }
+    @PatchMapping("/{id}/status")
+    public UserResponseDto updateStatus(@PathVariable Long id, @RequestBody UserUpdateRequestDto updatedUser) {
         return userService.updateUser(id, updatedUser);
     }
 

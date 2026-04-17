@@ -44,7 +44,8 @@ function UserForm({
         }
     }
 
-  return (<div>
+  return (
+  <div className="user-form-wrapper">
       <h2>{title}</h2>
 
         <form className="user-form" onSubmit={handleSubmit}>

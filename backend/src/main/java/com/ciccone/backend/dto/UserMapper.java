@@ -7,7 +7,7 @@ import com.ciccone.backend.entity.UserEntity;
 @Component
 public class UserMapper {
 
-    public UserEntity toEntity(UserRequestDto dto) {
+    public UserEntity toEntity(UserCreateRequestDto dto) {
         if (dto == null) {
             return null;
         }

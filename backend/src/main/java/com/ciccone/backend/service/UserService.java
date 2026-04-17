@@ -6,8 +6,9 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.ciccone.backend.dto.UserMapper;
-import com.ciccone.backend.dto.UserRequestDto;
+import com.ciccone.backend.dto.UserCreateRequestDto;
 import com.ciccone.backend.dto.UserResponseDto;
+import com.ciccone.backend.dto.UserUpdateRequestDto;
 import com.ciccone.backend.entity.UserEntity;
 import com.ciccone.backend.exception.ResourceNotFoundException;
 import com.ciccone.backend.repository.UserRepository;
@@ -23,7 +24,7 @@ public class UserService {
         this.userMapper = userMapper;
     }
 
-    public UserResponseDto createUser(UserRequestDto userRequestDto) {
+    public UserResponseDto createUser(UserCreateRequestDto userRequestDto) {
         UserEntity user = userMapper.toEntity(userRequestDto);
 
         OffsetDateTime now = OffsetDateTime.now();
@@ -46,7 +47,7 @@ public class UserService {
         return userMapper.toResponseDto(user);
     }
 
-    public UserResponseDto updateUser(Long id, UserRequestDto updatedUser) {
+    public UserResponseDto updateUser(Long id, UserCreateRequestDto updatedUser) {
         UserEntity existingUser = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
@@ -63,6 +64,29 @@ public class UserService {
 
         return userMapper.toResponseDto(userRepository.save(existingUser));
     }
+
+    public UserResponseDto updateUser(Long id, UserUpdateRequestDto updatedUser) {
+    UserEntity existingUser = userRepository.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+    existingUser.setFullName(updatedUser.getFullName());
+    existingUser.setEmail(updatedUser.getEmail());
+    existingUser.setRole(updatedUser.getRole());
+
+    // only update password if provided
+    if (updatedUser.getPasswordHash() != null && !updatedUser.getPasswordHash().isBlank()) {
+        existingUser.setPasswordHash(updatedUser.getPasswordHash());
+    }
+
+    // optional status update
+    if (updatedUser.getIsActive() != null) {
+        existingUser.setIsActive(updatedUser.getIsActive());
+    }
+
+    existingUser.setUpdatedAt(OffsetDateTime.now());
+
+    return userMapper.toResponseDto(userRepository.save(existingUser));
+}
 
     public void deleteUser(Long id) {
         UserEntity existingUser = userRepository.findById(id)

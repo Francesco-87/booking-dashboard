@@ -6,7 +6,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
-public class UserRequestDto {
+public class UserCreateRequestDto {
 
     @NotBlank
     private String fullName;

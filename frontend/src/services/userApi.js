@@ -1,9 +1,8 @@
 async function getUsers() {
   try {
-    const response = await fetch('http://localhost:8080/api/users')
-    const data = await response.json()
-    console.log('Fetched users:', data)
-    return data
+    const response = await fetch('http://localhost:8080/api/users')   
+    
+    return await response.json()
   } catch (error) {
     console.error('Error fetching users:', error)
   }
@@ -28,9 +27,9 @@ async function deactivateUser(userData) {
   try {
     console.log("Deactivate payload:", { ...userData, isActive: false })
 console.log("Activate payload:", { ...userData, isActive: true })
-    const response = await fetch(`http://localhost:8080/api/users/${userData.id}`, {
+    const response = await fetch(`http://localhost:8080/api/users/${userData.id}/status`, {
     
-      method: 'PUT',
+      method: 'PATCH',
       headers: {
         'Content-Type': 'application/json'
       },
@@ -44,9 +43,9 @@ console.log("Activate payload:", { ...userData, isActive: true })
 
 async function activateUser(userData) {
   try {
-    const response = await fetch(`http://localhost:8080/api/users/${userData.id}`, {
+    const response = await fetch(`http://localhost:8080/api/users/${userData.id}/status`, {
     
-      method: 'PUT',
+      method: 'PATCH',
       headers: {
         'Content-Type': 'application/json'
       },

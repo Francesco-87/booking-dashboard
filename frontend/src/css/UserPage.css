@@ -1,0 +1,198 @@
+/* ServicePage.css AI-Generated */
+.user-page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 32px 20px 48px;
+}
+
+.user-page__header {
+  margin-bottom: 24px;
+}
+
+.user-page__header h1 {
+  margin: 0 0 8px;
+}
+
+.user-page__header p {
+  margin: 0;
+  color: #555;
+}
+
+.user-page__create {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 28px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+}
+
+.user-list {
+  display: grid;
+  gap: 16px;
+}
+
+.user-card {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  padding: 18px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+}
+
+.user-card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.user-card__header h2 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.user-card__body p {
+  margin: 6px 0;
+}
+
+.user-card__actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.user-status {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.user-status--active {
+  background: #e7f8ec;
+  color: #1f7a3f;
+}
+
+.user-status--inactive {
+  background: #fce8e8;
+  color: #a12626;
+}
+
+.user-form-wrapper h2 {
+  margin-top: 0;
+  margin-bottom: 16px;
+}
+
+.user-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-field label {
+  font-weight: 600;
+}
+
+.form-field input,
+.form-field textarea,
+.form-field select {
+  padding: 10px 12px;
+  border: 1px solid #cfcfcf;
+  border-radius: 8px;
+  font: inherit;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.form-field input:focus,
+.form-field textarea:focus,
+.form-field select:focus {
+  outline: none;
+  border-color: #666;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.btn {
+  border: none;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn--primary {
+  background: #1f1f1f;
+  color: #fff;
+}
+
+.btn--secondary {
+  background: #ececec;
+  color: #111;
+}
+
+.btn--danger {
+  background: #b83232;
+  color: #fff;
+}
+
+.btn--success {
+  background: #1f7a3f;
+  color: #fff;
+}
+
+/* Modal */
+
+.user-edit-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  z-index: 1000;
+}
+
+.user-edit-modal__content {
+  background: #fff;
+  width: 100%;
+  max-width: 640px;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.18);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.modal-header h2 {
+  margin: 0;
+}
+
+@media (max-width: 700px) {
+  .user-card__header,
+  .user-card__actions,
+  .modal-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

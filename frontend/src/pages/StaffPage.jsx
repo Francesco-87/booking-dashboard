@@ -1,6 +1,10 @@
 import { useState, useEffect } from "react"
 import {
     getStaff,
+    createStaff,
+    deactivateStaff,
+    activateStaff,
+    updateStaff
 } from "../services/staffApi"
 import StaffForm from "../components/StaffForm"
 import "../css/StaffPage.css"
@@ -9,6 +13,7 @@ import "../css/StaffPage.css"
 
 function StaffPage() {
     const [staff, setStaff] = useState([])
+    const [selectedStaff, setSelectedStaff] = useState(null)
 
     async function loadStaff() {
         const data = await getStaff()
@@ -18,6 +23,12 @@ function StaffPage() {
     useEffect(() => {
         loadStaff()
     }, [])
+
+    async function handleStaffCreate(staffData) {
+      await createStaff(staffData)
+      await loadStaff()
+  }
+
       async function handleStaffChange(staffData) {
     if (staffData.isActive) {
       await deactivateStaff(staffData)
@@ -28,10 +39,7 @@ function StaffPage() {
     await loadStaff()
   }
 
-  async function handleStaffCreate(staffData) {
-    await createStaff(staffData)
-    await loadStaff()
-  }
+  
 
   async function handleStaffUpdate(staffData) {
     await updateStaff(staffData)
@@ -54,11 +62,11 @@ function StaffPage() {
       </div>
     
 
-       {/*<div className="staff-list">
+       <div className="staff-list">
         {staff.map((member) => (
           <div key={member.id} className="staff-card">
             <div className="staff-card__header">
-              <h2>{member.name}</h2>
+              <h2>{member.displayName}</h2>
               <span
                 className={
                   member.isActive
@@ -72,21 +80,20 @@ function StaffPage() {
 
             <div className="staff-card__body">
               <p>
+                <strong>User Id:</strong> {member.userId}
+              </p>
+              <p>
                 <strong>Description:</strong> {member.description || "—"}
               </p>
-              <p>
-                <strong>Duration:</strong> {member.durationMinutes} minutes
-              </p>
-              <p>
-                <strong>Price:</strong> ${(member.priceCents / 100).toFixed(2)}
-              </p>
+              
+              
             </div>
 
             <div className="staff-card__actions">
               <button
                 type="button"
                 className="btn btn--secondary"
-                onClick={() => setSelectedService(service)}
+                onClick={() => setSelectedStaff(member)}
               >
                 Edit
               </button>
@@ -101,11 +108,34 @@ function StaffPage() {
             </div>
           </div>
         ))}
-      </div> */}
-      </div>
+      </div> 
 
+      {selectedStaff && (
+        <div className="staff-edit-modal" onClick={() => setSelectedStaff(null)}>
+          <div className="staff-edit-modal__content" onClick={(e) => e.stopPropagation()}>  
+            <div className="modal-header">
+              <h2>Edit Staff</h2>
+              <button
+                type="button"
+                className="btn btn--secondary"
+                onClick={() => setSelectedStaff(null)}
+              >
+                Close
+              </button>
+            </div>
+            <StaffForm
+              onSubmit={handleStaffUpdate}
+              initialData={selectedStaff}
+              submitLabel="Update Staff"
+              title="Edit Staff"
+            />
 
-      )
+          </div>
+        </div>
+      )}
+
+    </div>
+  )
 }
 
 export default StaffPage 

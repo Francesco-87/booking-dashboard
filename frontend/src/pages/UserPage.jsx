@@ -51,6 +51,7 @@ function UsersPage() {
       <div className="user-page__create">
         <UserForm onSubmit={handleUserCreate} /> 
       </div>
+      
       <div className="user-list">
         {users.map((user) => (
           <div key={user.id} className="user-card">
@@ -67,6 +68,9 @@ function UsersPage() {
               </span>
             </div>
             <div className="user-card__body">
+              <p>
+                <strong>User Id:</strong> {user.id}
+              </p>
               <p>
                 <strong>Email:</strong> {user.email}
               </p>

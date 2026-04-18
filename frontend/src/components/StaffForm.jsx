@@ -43,10 +43,10 @@ function StaffForm({
   }
 
   return (
-    <div className="Staff-form-wrapper">
+    <div className="staff-form-wrapper">
       <h2>{title}</h2>
 
-      <form className="Staff-form" onSubmit={handleSubmit}>
+      <form className="staff-form" onSubmit={handleSubmit}>
         <div className="form-field">
           <label htmlFor="displayName">Display Name</label>
           <input

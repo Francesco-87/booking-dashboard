@@ -2,7 +2,7 @@ async function getStaff() {
   try {
     const response = await fetch('http://localhost:8080/api/staff-profiles')
 
-    
+   
     return await response.json()
     
   } catch (error) {

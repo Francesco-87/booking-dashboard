@@ -1,5 +1,0 @@
-ALTER TABLE users
-ALTER COLUMN role TYPE VARCHAR(20) USING role::text;
-
-ALTER TABLE users
-ADD CONSTRAINT chk_users_role CHECK (role IN ('ADMIN', 'STAFF'));

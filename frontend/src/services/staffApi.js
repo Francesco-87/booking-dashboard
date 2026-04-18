@@ -72,4 +72,23 @@ async function updateStaff(staffData) {
   }
 }
 
+async function addServiceToStaff(staffId, serviceId) {
+  try {
+    const response = await fetch(
+      `http://localhost:8080/api/staff-profiles/${staffId}/services/${serviceId}`,
+      {
+        method: 'POST'
+      }
+    )
+
+    if (!response.ok) {
+      throw new Error("Failed to add service to staff")
+    }
+
+    return true
+  } catch (error) {
+    console.error('Error adding service to staff:', error)
+  }
+}
+
 export { getStaff, createStaff, deactivateStaff, activateStaff, updateStaff }

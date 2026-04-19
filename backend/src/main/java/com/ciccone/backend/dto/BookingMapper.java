@@ -16,6 +16,8 @@ public class BookingMapper {
         BookingEntity entity = new BookingEntity();
         entity.setServiceId(dto.getServiceId());
         entity.setStaffProfileId(dto.getStaffProfileId());
+        entity.setCreatedByUserId(dto.getCreatedByUserId());
+        entity.setCustomerUserId(dto.getCustomerUserId());
         entity.setCustomerName(dto.getCustomerName());
         entity.setCustomerEmail(dto.getCustomerEmail());
         entity.setStartTime(dto.getStartTime());
@@ -34,6 +36,8 @@ public class BookingMapper {
                 entity.getId(),
                 entity.getServiceId(),
                 entity.getStaffProfileId(),
+                entity.getCreatedByUserId(),
+                entity.getCustomerUserId(),
                 entity.getCustomerName(),
                 entity.getCustomerEmail(),
                 entity.getStartTime(),

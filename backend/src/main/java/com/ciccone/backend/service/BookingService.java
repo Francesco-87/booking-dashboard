@@ -10,14 +10,12 @@ import com.ciccone.backend.dto.BookingRequestDto;
 import com.ciccone.backend.dto.BookingResponseDto;
 import com.ciccone.backend.entity.BookingEntity;
 import com.ciccone.backend.entity.BookingStatus;
-import com.ciccone.backend.entity.ServiceEntity;
-import com.ciccone.backend.entity.StaffProfileEntity;
 import com.ciccone.backend.exception.ConflictException;
 import com.ciccone.backend.exception.BadRequestException;
 import com.ciccone.backend.exception.ResourceNotFoundException;
 import com.ciccone.backend.repository.BookingRepository;
 import com.ciccone.backend.repository.StaffProfileRepository;
-
+import com.ciccone.backend.repository.UserRepository;
 import com.ciccone.backend.repository.ServiceRepository;
 
 
@@ -28,23 +26,34 @@ public class BookingService {
     private final BookingMapper bookingMapper;
     private final StaffProfileRepository staffProfileRepository;
     private final ServiceRepository serviceRepository;
+    private final UserRepository userRepository;
 
-    public BookingService(BookingRepository bookingRepository, BookingMapper bookingMapper, StaffProfileRepository staffProfileRepository, ServiceRepository serviceRepository) {
+    public BookingService(
+        BookingRepository bookingRepository,
+        BookingMapper bookingMapper,
+        StaffProfileRepository staffProfileRepository,
+        ServiceRepository serviceRepository,
+        UserRepository userRepository
+    ) {
         this.bookingRepository = bookingRepository;
         this.bookingMapper = bookingMapper;
         this.staffProfileRepository = staffProfileRepository;
         this.serviceRepository = serviceRepository;
+        this.userRepository = userRepository;
     }
 
-    // Create booking - validate input, check for conflicts, and return created booking
-    public BookingResponseDto createBooking(BookingRequestDto bookingRequestDto) {
+ // Create booking - validate input, check for conflicts, and return created booking
+public BookingResponseDto createBooking(BookingRequestDto bookingRequestDto) {
     validateTime(bookingRequestDto.getStartTime(), bookingRequestDto.getEndTime());
     validateStaffAndService(bookingRequestDto.getStaffProfileId(), bookingRequestDto.getServiceId());
+    validateUserReferences(bookingRequestDto);
+    validateCustomer(bookingRequestDto);
     validateNoOverlap(
             bookingRequestDto.getStaffProfileId(),
             bookingRequestDto.getStartTime(),
             bookingRequestDto.getEndTime()
     );
+
     BookingEntity bookingEntity = bookingMapper.toEntity(bookingRequestDto);
     OffsetDateTime now = OffsetDateTime.now();
     bookingEntity.setCreatedAt(now);
@@ -76,6 +85,8 @@ public class BookingService {
 
     validateTime(updatedBooking.getStartTime(), updatedBooking.getEndTime());
     validateStaffAndService(updatedBooking.getStaffProfileId(), updatedBooking.getServiceId());
+    validateUserReferences(updatedBooking);
+    validateCustomer(updatedBooking);
     validateNoOverlapExcludingCurrent(
             existingBooking.getId(),
             updatedBooking.getStaffProfileId(),
@@ -85,6 +96,7 @@ public class BookingService {
 
     existingBooking.setServiceId(updatedBooking.getServiceId());
     existingBooking.setStaffProfileId(updatedBooking.getStaffProfileId());
+    existingBooking.setCustomerUserId(updatedBooking.getCustomerUserId());
     existingBooking.setCustomerName(updatedBooking.getCustomerName());
     existingBooking.setCustomerEmail(updatedBooking.getCustomerEmail());
     existingBooking.setStartTime(updatedBooking.getStartTime());
@@ -93,7 +105,7 @@ public class BookingService {
     existingBooking.setUpdatedAt(OffsetDateTime.now());
 
     return bookingMapper.toResponseDto(bookingRepository.save(existingBooking));
-    }
+}
 
     // Delete booking - return 404 if not found
     public void deleteBooking(Long id) {
@@ -143,6 +155,26 @@ public class BookingService {
             throw new ConflictException("Booking overlaps with existing booking");
         }
     }
+
+    private void validateCustomer(BookingRequestDto bookingRequestDto) {
+    boolean hasCustomerUserId = bookingRequestDto.getCustomerUserId() != null;
+    boolean hasCustomerName = bookingRequestDto.getCustomerName() != null
+            && !bookingRequestDto.getCustomerName().trim().isEmpty();
+
+    if (!hasCustomerUserId && !hasCustomerName) {
+        throw new BadRequestException("Booking must have either a registered customer or a customer name");
+    }
+}
+
+private void validateUserReferences(BookingRequestDto bookingRequestDto) {
+    userRepository.findById(bookingRequestDto.getCreatedByUserId())
+            .orElseThrow(() -> new ResourceNotFoundException("Created by user not found"));
+
+    if (bookingRequestDto.getCustomerUserId() != null) {
+        userRepository.findById(bookingRequestDto.getCustomerUserId())
+                .orElseThrow(() -> new ResourceNotFoundException("Customer user not found"));
+    }
+}
        
 }
 

@@ -11,6 +11,8 @@ public class BookingResponseDto {
     private final Long id;
     private final Long serviceId;
     private final Long staffProfileId;
+    private final Long createdByUserId;
+    private final Long customerUserId;
     private final String customerName;
     private final String customerEmail;
     private final OffsetDateTime startTime;
@@ -20,14 +22,26 @@ public class BookingResponseDto {
     private final OffsetDateTime createdAt;
     private final OffsetDateTime updatedAt;
 
-    public BookingResponseDto(Long id, Long serviceId, Long staffProfileId,
-                              String customerName, String customerEmail,
-                              OffsetDateTime startTime, OffsetDateTime endTime,
-                              BookingStatus status, String notes,
-                              OffsetDateTime createdAt, OffsetDateTime updatedAt) {
+    public BookingResponseDto(
+            Long id,
+            Long serviceId,
+            Long staffProfileId,
+            Long createdByUserId,
+            Long customerUserId,
+            String customerName,
+            String customerEmail,
+            OffsetDateTime startTime,
+            OffsetDateTime endTime,
+            BookingStatus status,
+            String notes,
+            OffsetDateTime createdAt,
+            OffsetDateTime updatedAt
+    ) {
         this.id = id;
         this.serviceId = serviceId;
         this.staffProfileId = staffProfileId;
+        this.createdByUserId = createdByUserId;
+        this.customerUserId = customerUserId;
         this.customerName = customerName;
         this.customerEmail = customerEmail;
         this.startTime = startTime;
@@ -38,15 +52,55 @@ public class BookingResponseDto {
         this.updatedAt = updatedAt;
     }
 
-    public Long getId() { return id; }
-    public Long getServiceId() { return serviceId; }
-    public Long getStaffProfileId() { return staffProfileId; }
-    public String getCustomerName() { return customerName; }
-    public String getCustomerEmail() { return customerEmail; }
-    public OffsetDateTime getStartTime() { return startTime; }
-    public OffsetDateTime getEndTime() { return endTime; }
-    public BookingStatus getStatus() { return status; }
-    public String getNotes() { return notes; }
-    public OffsetDateTime getCreatedAt() { return createdAt; }
-    public OffsetDateTime getUpdatedAt() { return updatedAt; }
+    public Long getId() {
+        return id;
+    }
+
+    public Long getServiceId() {
+        return serviceId;
+    }
+
+    public Long getStaffProfileId() {
+        return staffProfileId;
+    }
+
+    public Long getCreatedByUserId() {
+        return createdByUserId;
+    }
+
+    public Long getCustomerUserId() {
+        return customerUserId;
+    }
+
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    public String getCustomerEmail() {
+        return customerEmail;
+    }
+
+    public OffsetDateTime getStartTime() {
+        return startTime;
+    }
+
+    public OffsetDateTime getEndTime() {
+        return endTime;
+    }
+
+    public BookingStatus getStatus() {
+        return status;
+    }
+
+    public String getNotes() {
+        return notes;
+    }
+
+    public OffsetDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public OffsetDateTime getUpdatedAt() {
+        return updatedAt;
+    }
 }

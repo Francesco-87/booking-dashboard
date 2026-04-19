@@ -18,11 +18,10 @@ import jakarta.validation.constraints.*;
 @Table(name = "bookings")
 public class BookingEntity {
 
-
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
+
     @Column(name = "service_id")
     @NotNull
     private Long serviceId;
@@ -31,8 +30,14 @@ public class BookingEntity {
     @NotNull
     private Long staffProfileId;
 
+    @Column(name = "created_by_user_id")
+    @NotNull
+    private Long createdByUserId;
+
+    @Column(name = "customer_user_id")
+    private Long customerUserId;
+
     @Column(name = "customer_name")
-    @NotBlank
     private String customerName;
 
     @Column(name = "customer_email")
@@ -49,7 +54,9 @@ public class BookingEntity {
 
     @Enumerated(EnumType.STRING)
     private BookingStatus status;
+
     private String notes;
+
     @Column(name = "created_at")
     private OffsetDateTime createdAt;
 
@@ -58,7 +65,6 @@ public class BookingEntity {
 
     public BookingEntity() {
     }
-
 
     public Long getId() {
         return id;
@@ -78,6 +84,22 @@ public class BookingEntity {
 
     public void setStaffProfileId(Long staffProfileId) {
         this.staffProfileId = staffProfileId;
+    }
+
+    public Long getCreatedByUserId() {
+        return createdByUserId;
+    }
+
+    public void setCreatedByUserId(Long createdByUserId) {
+        this.createdByUserId = createdByUserId;
+    }
+
+    public Long getCustomerUserId() {
+        return customerUserId;
+    }
+
+    public void setCustomerUserId(Long customerUserId) {
+        this.customerUserId = customerUserId;
     }
 
     public String getCustomerName() {
@@ -143,7 +165,4 @@ public class BookingEntity {
     public void setUpdatedAt(OffsetDateTime updatedAt) {
         this.updatedAt = updatedAt;
     }
-
-
-    
 }

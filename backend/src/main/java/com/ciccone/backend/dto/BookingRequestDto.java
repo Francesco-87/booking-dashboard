@@ -7,20 +7,28 @@ import jakarta.validation.constraints.*;
 public class BookingRequestDto {
 
     @NotNull
-    private Long serviceId;  
+    private Long serviceId;
+
     @NotNull
     private Long staffProfileId;
-    @Email
-    @NotBlank
+
+    @NotNull
+    private Long createdByUserId;
+
+    private Long customerUserId;
+
     private String customerName;
+
     @Email
     private String customerEmail;
+
     @NotNull
     private OffsetDateTime startTime;
+
     @NotNull
     private OffsetDateTime endTime;
+
     private String notes;
-    
 
     public Long getServiceId() {
         return serviceId;
@@ -36,6 +44,22 @@ public class BookingRequestDto {
 
     public void setStaffProfileId(Long staffProfileId) {
         this.staffProfileId = staffProfileId;
+    }
+
+    public Long getCreatedByUserId() {
+        return createdByUserId;
+    }
+
+    public void setCreatedByUserId(Long createdByUserId) {
+        this.createdByUserId = createdByUserId;
+    }
+
+    public Long getCustomerUserId() {
+        return customerUserId;
+    }
+
+    public void setCustomerUserId(Long customerUserId) {
+        this.customerUserId = customerUserId;
     }
 
     public String getCustomerName() {
@@ -77,7 +101,4 @@ public class BookingRequestDto {
     public void setNotes(String notes) {
         this.notes = notes;
     }
-
-  
-
 }

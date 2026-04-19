@@ -115,17 +115,13 @@ public class BookingService {
      }
 
 
-     private void  validateStaffAndService(Long staffProfileId, Long serviceId) {
-         StaffProfileEntity staffProfile = staffProfileRepository.findById(staffProfileId)
-        .orElseThrow(() -> new ResourceNotFoundException("Staff profile not found"));
+    private void validateStaffAndService(Long staffProfileId, Long serviceId) {
+        staffProfileRepository.findById(staffProfileId)
+            .orElseThrow(() -> new ResourceNotFoundException("Staff profile not found"));
 
-        ServiceEntity service = serviceRepository.findById(serviceId)
-        .orElseThrow(() -> new ResourceNotFoundException("Service not found"));
-
-        if (!staffProfile.getServices().contains(service)) {
-            throw new BadRequestException("Staff cannot perform this service");
-            }
-     }
+        serviceRepository.findById(serviceId)
+            .orElseThrow(() -> new ResourceNotFoundException("Service not found"));
+    }
 
     private void validateNoOverlap(Long staffProfileId, OffsetDateTime startTime, OffsetDateTime endTime) {
         if (bookingRepository.existsByStaffProfileIdAndStartTimeLessThanAndEndTimeGreaterThan(

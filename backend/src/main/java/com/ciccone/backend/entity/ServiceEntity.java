@@ -1,30 +1,28 @@
 package com.ciccone.backend.entity;
 
 import java.time.OffsetDateTime;
-import java.util.HashSet;
-import java.util.Set;
 
 import jakarta.validation.constraints.*;
 
 
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 
-
 @Entity
 @Table(name = "services")
 public class ServiceEntity {
 
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @NotBlank
     private String name;
+
     private String description;
 
     @Column(name = "duration_minutes")
@@ -37,16 +35,12 @@ public class ServiceEntity {
 
     @Column(name = "is_active", nullable = false)
     private Boolean isActive = true;
+
     @Column(name = "created_at")
     private OffsetDateTime createdAt;
+
     @Column(name = "updated_at")
     private OffsetDateTime updatedAt;
-
-    @ManyToMany(mappedBy = "services")
-    private Set<StaffProfileEntity> staffProfiles = new HashSet<>();
-    
-
-    
 
     public ServiceEntity() {
     }
@@ -55,84 +49,59 @@ public class ServiceEntity {
         return id;
     }
 
-
     public String getName() {
         return name;
     }
-
 
     public void setName(String name) {
         this.name = name;
     }
 
-
     public String getDescription() {
         return description;
     }
-
 
     public void setDescription(String description) {
         this.description = description;
     }
 
-
     public Integer getDurationMinutes() {
         return durationMinutes;
     }
-
 
     public void setDurationMinutes(Integer durationMinutes) {
         this.durationMinutes = durationMinutes;
     }
 
-
     public Integer getPriceCents() {
         return priceCents;
     }
-
 
     public void setPriceCents(Integer priceCents) {
         this.priceCents = priceCents;
     }
 
-
     public Boolean getIsActive() {
         return isActive;
     }
-
 
     public void setIsActive(Boolean isActive) {
         this.isActive = isActive;
     }
 
-
     public OffsetDateTime getCreatedAt() {
         return createdAt;
     }
-
 
     public void setCreatedAt(OffsetDateTime createdAt) {
         this.createdAt = createdAt;
     }
 
-
     public OffsetDateTime getUpdatedAt() {
         return updatedAt;
     }
 
-
     public void setUpdatedAt(OffsetDateTime updatedAt) {
         this.updatedAt = updatedAt;
     }
-
-
-    // Getters and setters relationships
-    public Set<StaffProfileEntity> getStaffProfiles() {
-        return staffProfiles;
-    }
-
-    public void setStaffProfiles(Set<StaffProfileEntity> staffProfiles) {
-        this.staffProfiles = staffProfiles;
-    }
-    
 }

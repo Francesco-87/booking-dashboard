@@ -50,9 +50,4 @@ public class StaffProfileController {
         staffProfileService.deleteStaffProfile(id);
     }
 
-    @PostMapping("/{staffId}/services/{serviceId}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void assignServiceToStaffProfile(@PathVariable Long staffId, @PathVariable Long serviceId) {
-        staffProfileService.addServiceToStaffProfile(staffId, serviceId);
-    }
 }

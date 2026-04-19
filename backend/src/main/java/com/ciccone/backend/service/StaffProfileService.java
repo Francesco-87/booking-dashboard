@@ -76,16 +76,4 @@ public class StaffProfileService {
         staffProfileRepository.delete(existingStaffProfile);
     }
 
-    public void addServiceToStaffProfile(Long staffProfileId, Long serviceId) {
-        StaffProfileEntity staffProfile = staffProfileRepository.findById(staffProfileId)
-                .orElseThrow(() -> new ResourceNotFoundException("Staff profile not found"));
-
-        ServiceEntity service = serviceRepository.findById(serviceId)
-                .orElseThrow(() -> new ResourceNotFoundException("Service not found"));
-
-        staffProfile.getServices().add(service);
-        staffProfile.setUpdatedAt(OffsetDateTime.now());
-
-        staffProfileRepository.save(staffProfile);
-    }
-}
+  }

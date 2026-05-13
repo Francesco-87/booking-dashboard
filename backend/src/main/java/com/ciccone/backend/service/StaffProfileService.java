@@ -7,10 +7,8 @@ import org.springframework.stereotype.Service;
 import com.ciccone.backend.dto.StaffProfileMapper;
 import com.ciccone.backend.dto.StaffProfileRequestDto;
 import com.ciccone.backend.dto.StaffProfileResponseDto;
-import com.ciccone.backend.entity.ServiceEntity;
 import com.ciccone.backend.entity.StaffProfileEntity;
 import com.ciccone.backend.exception.ResourceNotFoundException;
-import com.ciccone.backend.repository.ServiceRepository;
 import com.ciccone.backend.repository.StaffProfileRepository;
 
 @Service
@@ -18,16 +16,16 @@ public class StaffProfileService {
 
     private final StaffProfileRepository staffProfileRepository;
     private final StaffProfileMapper staffProfileMapper;
-    private final ServiceRepository serviceRepository;
+    
 
     public StaffProfileService(
             StaffProfileRepository staffProfileRepository,
-            StaffProfileMapper staffProfileMapper,
-            ServiceRepository serviceRepository
+            StaffProfileMapper staffProfileMapper
+            
     ) {
         this.staffProfileRepository = staffProfileRepository;
         this.staffProfileMapper = staffProfileMapper;
-        this.serviceRepository = serviceRepository;
+        
     }
 
     public StaffProfileResponseDto createStaffProfile(StaffProfileRequestDto staffProfileRequestDto) {

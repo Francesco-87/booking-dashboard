@@ -1,6 +1,10 @@
+
+const USER_API_URL = "http://localhost:8080/api/users"
+
+
 async function getUsers() {
   try {
-    const response = await fetch('http://localhost:8080/api/users')   
+    const response = await fetch(USER_API_URL)   
     
     return await response.json()
   } catch (error) {
@@ -10,7 +14,7 @@ async function getUsers() {
 
 async function createUser(userData) {
   try {
-    const response = await fetch('http://localhost:8080/api/users', {
+    const response = await fetch(USER_API_URL, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -27,7 +31,7 @@ async function deactivateUser(userData) {
   try {
     console.log("Deactivate payload:", { ...userData, isActive: false })
 console.log("Activate payload:", { ...userData, isActive: true })
-    const response = await fetch(`http://localhost:8080/api/users/${userData.id}/status`, {
+    const response = await fetch(`${USER_API_URL}/${userData.id}/status`, {
     
       method: 'PATCH',
       headers: {
@@ -43,7 +47,7 @@ console.log("Activate payload:", { ...userData, isActive: true })
 
 async function activateUser(userData) {
   try {
-    const response = await fetch(`http://localhost:8080/api/users/${userData.id}/status`, {
+    const response = await fetch(`${USER_API_URL}/${userData.id}/status`, {
     
       method: 'PATCH',
       headers: {
@@ -59,7 +63,7 @@ async function activateUser(userData) {
 
 async function updateUser(userData) {
   try {
-    const response = await fetch(`http://localhost:8080/api/users/${userData.id}`, {
+    const response = await fetch(`${USER_API_URL}/${userData.id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json'

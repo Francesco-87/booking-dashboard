@@ -1,6 +1,10 @@
+
+const SERVICE_API_URL = "http://localhost:8080/api/services"
+
+
 async function getServices() {
   try {
-    const response = await fetch('http://localhost:8080/api/services')
+    const response = await fetch(SERVICE_API_URL)
     return await response.json()
   } catch (error) {
     console.error('Error fetching services:', error)
@@ -9,7 +13,7 @@ async function getServices() {
 
 async function createService(serviceData) {
   try {
-    const response = await fetch('http://localhost:8080/api/services', {
+    const response = await fetch(SERVICE_API_URL, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -24,8 +28,7 @@ async function createService(serviceData) {
 
 async function deactivateService(serviceData) {
   try {
-    const response = await fetch(`http://localhost:8080/api/services/${serviceData.id}`, {
-    
+    const response = await fetch(`${SERVICE_API_URL}/${serviceData.id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json'
@@ -40,7 +43,7 @@ async function deactivateService(serviceData) {
 
 async function activateService(serviceData) {
   try {
-    const response = await fetch(`http://localhost:8080/api/services/${serviceData.id}`, {
+    const response = await fetch(`${SERVICE_API_URL}/${serviceData.id}`, {
     
       method: 'PUT',
       headers: {
@@ -56,7 +59,7 @@ async function activateService(serviceData) {
 
 async function updateService(serviceData) {
   try {
-    const response = await fetch(`http://localhost:8080/api/services/${serviceData.id}`, {
+    const response = await fetch(`${SERVICE_API_URL}/${serviceData.id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json'

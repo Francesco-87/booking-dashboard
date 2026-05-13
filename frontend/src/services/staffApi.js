@@ -1,6 +1,8 @@
+  const STAFF_API_URL = "http://localhost:8080/api/staff-profiles"
+  
 async function getStaff() {
   try {
-    const response = await fetch('http://localhost:8080/api/staff-profiles')
+    const response = await fetch(STAFF_API_URL)
 
    
     return await response.json()
@@ -12,7 +14,7 @@ async function getStaff() {
 
 async function createStaff(staffData) {
   try {
-    const response = await fetch('http://localhost:8080/api/staff-profiles', {
+    const response = await fetch(STAFF_API_URL, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -27,7 +29,7 @@ async function createStaff(staffData) {
 
 async function deactivateStaff(staffData) {
   try {
-    const response = await fetch(`http://localhost:8080/api/staff-profiles/${staffData.id}`, {
+    const response = await fetch(`${STAFF_API_URL}/${staffData.id}`, {
 
       method: 'PUT',
       headers: {
@@ -43,7 +45,7 @@ async function deactivateStaff(staffData) {
 
 async function activateStaff(staffData) {
   try {
-    const response = await fetch(`http://localhost:8080/api/staff-profiles/${staffData.id}`, {
+    const response = await fetch(`${STAFF_API_URL}/${staffData.id}`, {
     
       method: 'PUT',
       headers: {
@@ -59,7 +61,7 @@ async function activateStaff(staffData) {
 
 async function updateStaff(staffData) {
   try {
-    const response = await fetch(`http://localhost:8080/api/staff-profiles/${staffData.id}`, {
+    const response = await fetch(`${STAFF_API_URL}/${staffData.id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json'
@@ -75,7 +77,7 @@ async function updateStaff(staffData) {
 async function addServiceToStaff(staffId, serviceId) {
   try {
     const response = await fetch(
-      `http://localhost:8080/api/staff-profiles/${staffId}/services/${serviceId}`,
+      `${STAFF_API_URL}/${staffId}/services/${serviceId}`,
       {
         method: 'POST'
       }

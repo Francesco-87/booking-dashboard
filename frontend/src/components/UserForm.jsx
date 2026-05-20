@@ -100,6 +100,7 @@ function UserForm({
                     <option value="">Select Role</option>
                     <option value="ADMIN">Admin</option>
                     <option value="STAFF">Staff</option>
+                    <option value="CUSTOMER">Customer</option>
                 </select>
             </div>
             <div className="form-actions">              

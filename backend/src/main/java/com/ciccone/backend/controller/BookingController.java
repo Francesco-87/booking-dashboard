@@ -43,6 +43,11 @@ public class BookingController {
         return bookingService.updateBooking(id, updatedBooking);
     }
 
+    @PatchMapping("/{id}/cancel")
+    public BookingResponseDto cancelBooking(@PathVariable Long id) {
+    return bookingService.cancelBooking(id);
+}
+
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteBooking(@PathVariable Long id) {

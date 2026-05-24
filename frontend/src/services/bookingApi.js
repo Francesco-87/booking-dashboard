@@ -26,6 +26,23 @@ async function updateBooking(id, bookingData) {
     body: JSON.stringify(bookingData),
   })
 
+  if (!response.ok) {
+    const errorData = await response.json()
+    throw new Error(errorData.message)
+  }
+
+  return await response.json()
+}
+async function cancelBooking(id) {
+  const response = await fetch(`${API_URL}/${id}/cancel`, {
+    method: "PATCH",
+  })
+
+  if (!response.ok) {
+    const errorData = await response.json()
+    throw new Error(errorData.message)
+  }
+
   return await response.json()
 }
 
@@ -35,4 +52,4 @@ async function deleteBooking(id) {
   })
 }
 
-export { getBookings, createBooking, updateBooking, deleteBooking }
+export { getBookings, createBooking, updateBooking, cancelBooking, deleteBooking }

@@ -26,8 +26,8 @@ function AdminPage() {
       </div>
 
       <div>
-        <button disabled>
-          Manage Bookings (coming soon)
+        <button onClick={() => navigate("/admin/bookings")}>
+          Manage Bookings
         </button>
       </div>
     </div>

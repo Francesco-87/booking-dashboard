@@ -106,6 +106,16 @@ public BookingResponseDto createBooking(BookingRequestDto bookingRequestDto) {
 
     return bookingMapper.toResponseDto(bookingRepository.save(existingBooking));
 }
+// Cancel booking - set status to CANCELLED and return updated booking
+public BookingResponseDto cancelBooking(Long id) {
+    BookingEntity existingBooking = bookingRepository.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Booking not found"));
+
+    existingBooking.setStatus(BookingStatus.CANCELLED);
+    existingBooking.setUpdatedAt(OffsetDateTime.now());
+
+    return bookingMapper.toResponseDto(bookingRepository.save(existingBooking));
+}
 
     // Delete booking - return 404 if not found
     public void deleteBooking(Long id) {

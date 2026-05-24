@@ -4,6 +4,7 @@ import ServicePage from "./pages/ServicePage"
 import StaffPage from "./pages/StaffPage"
 import CustomerPage from "./pages/CustomerPage"
 import HomePage from "./pages/HomePage"
+import BookingPage from "./pages/BookingPage"
 import { BrowserRouter, Routes, Route } from "react-router-dom"
 
 
@@ -16,6 +17,7 @@ function App() {
           <Route path="/admin/services" element={<ServicePage />} />
           <Route path="/admin/staff" element={<StaffPage />} />
           <Route path="/admin/user" element={<UserPage />} />
+          <Route path="/admin/bookings" element={<BookingPage />} />
           <Route path="/customer" element={<CustomerPage />} />
           
           

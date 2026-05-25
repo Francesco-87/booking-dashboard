@@ -5,6 +5,9 @@ function BookingForm({
   initialData = null,
   submitLabel = "Create Booking",
   title = "Create Booking",
+  services,
+  staff,
+  users,
 }) {
   const emptyForm = {
     createdByUserId: "",
@@ -80,6 +83,8 @@ function BookingForm({
     }
   }
 
+
+
   return (
     <div className="booking-form-wrapper">
       <h2>{title}</h2>
@@ -87,25 +92,37 @@ function BookingForm({
       <form className="booking-form" onSubmit={handleSubmit}>
         <div className="form-field">
           <label htmlFor="createdByUserId">Created By User ID</label>
-          <input
-            type="number"
+          <select
             id="createdByUserId"
             name="createdByUserId"
             value={formData.createdByUserId}
             onChange={handleChange}
             required
-          />
+          >
+            <option value="">Select a user</option>
+            {users.map((user) => (
+              <option key={user.id} value={user.id}>
+                {user.fullName} (ID: {user.id})
+              </option>
+            ))}
+          </select>
         </div>
 
         <div className="form-field">
           <label htmlFor="customerUserId">Customer User ID</label>
-          <input
-            type="number"
+          <select
             id="customerUserId"
             name="customerUserId"
             value={formData.customerUserId}
             onChange={handleChange}
-          />
+          >
+            <option value="">Select a customer</option>
+            {users.map((user) => (
+              <option key={user.id} value={user.id}>
+                {user.fullName}
+              </option>
+            ))}
+          </select>
         </div>
 
         <div className="form-field">
@@ -130,28 +147,42 @@ function BookingForm({
           />
         </div>
 
-        <div className="form-field">
-          <label htmlFor="serviceId">Service ID</label>
-          <input
-            type="number"
+       <div className="form-field">
+          <label htmlFor="serviceId">Service</label>
+
+          <select
             id="serviceId"
             name="serviceId"
             value={formData.serviceId}
             onChange={handleChange}
             required
-          />
+          >
+            <option value="">Select a service</option>
+
+            {services.map((service) => (
+              <option key={service.id} value={service.id}>
+                {service.name}
+              </option>
+            ))}
+          </select>
         </div>
 
         <div className="form-field">
           <label htmlFor="staffProfileId">Staff Profile ID</label>
-          <input
-            type="number"
+          <select
             id="staffProfileId"
             name="staffProfileId"
             value={formData.staffProfileId}
             onChange={handleChange}
             required
-          />
+          >
+            <option value="">Select a staff profile</option>
+            {staff.map((profile) => (
+              <option key={profile.id} value={profile.id}>
+                {profile.displayName} (ID: {profile.id})
+              </option>
+            ))}
+          </select>
         </div>
 
         <div className="form-field">

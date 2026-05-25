@@ -5,12 +5,19 @@ import {
   updateBooking,
   cancelBooking,
 } from "../services/bookingApi"
+import { getServices } from "../services/serviceApi"
+import { getStaff } from "../services/staffApi"
+import { getUsers } from "../services/userApi"
 import BookingForm from "../components/BookingForm"
 import "../css/BookingPage.css"
 
 function BookingPage() {
   const [bookings, setBookings] = useState([])
   const [selectedBooking, setSelectedBooking] = useState(null)
+  const [users, setUsers] = useState([])
+  const [services, setServices] = useState([])
+  const [staff, setStaff] = useState([])
+
 
   async function loadBookings() {
     const data = await getBookings()
@@ -19,6 +26,7 @@ function BookingPage() {
 
   useEffect(() => {
     loadBookings()
+    loadDropdownData()
   }, [])
 
   async function handleBookingCreate(bookingData) {
@@ -44,6 +52,17 @@ async function handleBookingCancel(id) {
   }
 }
 
+async function loadDropdownData() {
+  const servicesData = await getServices()
+  const staffData = await getStaff()
+  const usersData = await getUsers()
+
+  setServices(servicesData)
+  setStaff(staffData)
+  setUsers(usersData)
+  
+}
+
   return (
     <div className="booking-page">
       <div className="booking-page__header">
@@ -52,6 +71,9 @@ async function handleBookingCancel(id) {
       </div>
 
       <BookingForm
+        services={services}
+        staff={staff}
+        users={users}
         onSubmit={handleBookingCreate}
         submitLabel="Create Booking"
         title="Create Booking"
@@ -129,10 +151,11 @@ async function handleBookingCancel(id) {
             </div>
 
             <BookingForm
-              initialData={selectedBooking}
+              booking={selectedBooking}
+              services={services}
+              staff={staff}
+              users={users}
               onSubmit={handleBookingUpdate}
-              submitLabel="Update Booking"
-              title="Edit Booking"
             />
           </div>
         </div>

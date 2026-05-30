@@ -22,6 +22,9 @@ function BookingForm({
   }
 
   const [formData, setFormData] = useState(emptyForm)
+  const filteredUsers = users.filter((user) => user.role === "CUSTOMER")
+  const now = new Date().toISOString().slice(0, 16)
+  
 
   useEffect(() => {
     if (initialData) {
@@ -83,6 +86,9 @@ function BookingForm({
     }
   }
 
+
+ 
+
   return (
     <div className="booking-form-wrapper">
       <h2>{title}</h2>
@@ -107,15 +113,15 @@ function BookingForm({
         </div>
 
         <div className="form-field">
-          <label htmlFor="customerUserId">Customer User</label>
+          <label htmlFor="customerUserId">Customer </label>
           <select
             id="customerUserId"
             name="customerUserId"
             value={formData.customerUserId}
             onChange={handleChange}
           >
-            <option value="">Guest customer</option>
-            {users.map((user) => (
+            <option value="">Choose customer</option>
+            {filteredUsers.map((user) => (
               <option key={user.id} value={user.id}>
                 {user.fullName}
               </option>
@@ -185,6 +191,7 @@ function BookingForm({
           <label htmlFor="startTime">Start Time</label>
           <input
             type="datetime-local"
+            min={now}
             id="startTime"
             name="startTime"
             value={formData.startTime}
@@ -197,6 +204,7 @@ function BookingForm({
           <label htmlFor="endTime">End Time</label>
           <input
             type="datetime-local"
+            min={formData.startTime || now}
             id="endTime"
             name="endTime"
             value={formData.endTime}

@@ -5,9 +5,9 @@ function BookingForm({
   initialData = null,
   submitLabel = "Create Booking",
   title = "Create Booking",
-  services,
-  staff,
-  users,
+  services = [],
+  staff = [],
+  users = [],
 }) {
   const emptyForm = {
     createdByUserId: "",
@@ -83,15 +83,13 @@ function BookingForm({
     }
   }
 
-
-
   return (
     <div className="booking-form-wrapper">
       <h2>{title}</h2>
 
       <form className="booking-form" onSubmit={handleSubmit}>
         <div className="form-field">
-          <label htmlFor="createdByUserId">Created By User ID</label>
+          <label htmlFor="createdByUserId">Created By</label>
           <select
             id="createdByUserId"
             name="createdByUserId"
@@ -109,14 +107,14 @@ function BookingForm({
         </div>
 
         <div className="form-field">
-          <label htmlFor="customerUserId">Customer User ID</label>
+          <label htmlFor="customerUserId">Customer User</label>
           <select
             id="customerUserId"
             name="customerUserId"
             value={formData.customerUserId}
             onChange={handleChange}
           >
-            <option value="">Select a customer</option>
+            <option value="">Guest customer</option>
             {users.map((user) => (
               <option key={user.id} value={user.id}>
                 {user.fullName}
@@ -126,7 +124,7 @@ function BookingForm({
         </div>
 
         <div className="form-field">
-          <label htmlFor="customerName">Customer Name</label>
+          <label htmlFor="customerName">Guest Customer Name</label>
           <input
             type="text"
             id="customerName"
@@ -137,7 +135,7 @@ function BookingForm({
         </div>
 
         <div className="form-field">
-          <label htmlFor="customerEmail">Customer Email</label>
+          <label htmlFor="customerEmail">Guest Customer Email</label>
           <input
             type="email"
             id="customerEmail"
@@ -147,9 +145,8 @@ function BookingForm({
           />
         </div>
 
-       <div className="form-field">
+        <div className="form-field">
           <label htmlFor="serviceId">Service</label>
-
           <select
             id="serviceId"
             name="serviceId"
@@ -158,7 +155,6 @@ function BookingForm({
             required
           >
             <option value="">Select a service</option>
-
             {services.map((service) => (
               <option key={service.id} value={service.id}>
                 {service.name}
@@ -168,7 +164,7 @@ function BookingForm({
         </div>
 
         <div className="form-field">
-          <label htmlFor="staffProfileId">Staff Profile ID</label>
+          <label htmlFor="staffProfileId">Performer</label>
           <select
             id="staffProfileId"
             name="staffProfileId"
@@ -176,7 +172,7 @@ function BookingForm({
             onChange={handleChange}
             required
           >
-            <option value="">Select a staff profile</option>
+            <option value="">Select a performer</option>
             {staff.map((profile) => (
               <option key={profile.id} value={profile.id}>
                 {profile.displayName} (ID: {profile.id})

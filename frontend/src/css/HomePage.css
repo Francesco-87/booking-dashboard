@@ -1,0 +1,50 @@
+.home-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.home-page__hero {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.home-page__hero h1 {
+  margin-bottom: 0.5rem;
+}
+
+.home-page__hero p {
+  color: #666;
+}
+
+.home-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.home-card {
+  padding: 2rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: white;
+}
+
+.home-card h2 {
+  margin-top: 0;
+}
+
+.home-card p {
+  margin-bottom: 1.5rem;
+  color: #666;
+}
+
+.home-card button {
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .home-page {
+    padding: 1rem;
+  }
+}

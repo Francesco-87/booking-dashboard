@@ -1,0 +1,9 @@
+.back-button {
+  margin-bottom: 1rem;
+}
+
+.back-button button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}

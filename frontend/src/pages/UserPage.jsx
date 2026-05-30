@@ -6,6 +6,7 @@ import {
   activateUser,
   updateUser,
 } from "../services/userApi"
+import BackButton from "../components/BackButton"
 import UserForm from "../components/UserForm"
 import "../css/UserPage.css"
 
@@ -43,6 +44,7 @@ function UsersPage() {
 
   return (
     <div className="user-page">
+      <BackButton />
       <div className="user-page__header">
       <h1>Manage Users</h1>
       <p>View and manage all users in the system</p>

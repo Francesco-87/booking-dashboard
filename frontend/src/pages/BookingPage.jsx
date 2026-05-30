@@ -8,6 +8,7 @@ import {
 import { getServices } from "../services/serviceApi"
 import { getStaff } from "../services/staffApi"
 import { getUsers } from "../services/userApi"
+import BackButton from "../components/BackButton"
 import BookingForm from "../components/BookingForm"
 import "../css/BookingPage.css"
 
@@ -62,9 +63,25 @@ async function loadDropdownData() {
   setUsers(usersData)
   
 }
+function getServiceName(serviceId) {
+  const service = services.find((s) => s.id === serviceId)
+  return service ? service.name : `Service #${serviceId}`
+}
+
+function getStaffName(staffId) {
+  const staffMember = staff.find((s) => s.id === staffId)
+  return staffMember ? staffMember.displayName : `Staff #${staffId}`
+}
+
+function getUserName(userId) {
+  const user = users.find((u) => u.id === userId)
+  return user ? user.fullName : `User #${userId}`
+}
+
 
   return (
     <div className="booking-page">
+      <BackButton />
       <div className="booking-page__header">
         <h1>Booking Management</h1>
         <p>View and manage bookings.</p>
@@ -88,14 +105,16 @@ async function loadDropdownData() {
           <div key={booking.id} className="booking-card">
             <div className="booking-card__header">
               <h2>
-                {booking.customerName || `Customer #${booking.customerUserId}`}
+                 {booking.customerUserId
+                  ? getUserName(booking.customerUserId)
+                  : booking.customerName || "Guest Customer"}
               </h2>
             </div>
 
             <div className="booking-card__body">
-              <p>Service ID: {booking.serviceId}</p>
-              <p>Performer ID: {booking.staffProfileId}</p>
-              <p>Created by User ID: {booking.createdByUserId}</p>
+              <p>Service: {getServiceName(booking.serviceId)}</p>
+              <p>Performer: {getStaffName(booking.staffProfileId)}</p>
+              <p>Created by: {getUserName(booking.createdByUserId)}</p>
 
               {booking.customerEmail && (
                 <p>Email: {booking.customerEmail}</p>
@@ -151,11 +170,13 @@ async function loadDropdownData() {
             </div>
 
             <BookingForm
-              booking={selectedBooking}
+              initialData={selectedBooking}
               services={services}
               staff={staff}
               users={users}
               onSubmit={handleBookingUpdate}
+              submitLabel="Update Booking"
+              title="Edit Booking"
             />
           </div>
         </div>

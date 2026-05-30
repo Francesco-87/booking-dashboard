@@ -7,6 +7,7 @@ import {
   activateService,
 } from "../services/serviceApi"
 import ServiceForm from "../components/ServiceForm"
+import BackButton from "../components/BackButton"
 import "../css/ServicePage.css"
 
 function ServicePage() {
@@ -45,6 +46,7 @@ function ServicePage() {
 
   return (
     <div className="service-page">
+      <BackButton />
       <div className="service-page__header">
         <h1>Service Management</h1>
         <p>Create, edit, activate, and deactivate services.</p>

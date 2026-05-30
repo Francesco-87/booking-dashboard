@@ -6,6 +6,7 @@ import {
     activateStaff,
     updateStaff
 } from "../services/staffApi"
+import BackButton from "../components/BackButton"
 import StaffForm from "../components/StaffForm"
 import "../css/StaffPage.css"
 
@@ -51,6 +52,7 @@ function StaffPage() {
     // Component code here
     return (
     <div className="staff-page">
+      <BackButton />
       <div className="staff-page__header">
         <h1>Staff Management</h1>
         <p>Create, edit, activate, and deactivate staff members.</p>

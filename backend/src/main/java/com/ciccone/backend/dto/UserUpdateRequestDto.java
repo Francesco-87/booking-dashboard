@@ -1,4 +1,4 @@
-package com.ciccone.backend.dto;
+﻿package com.ciccone.backend.dto;
 
 
 import com.ciccone.backend.entity.UserRole;
@@ -7,21 +7,26 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
+// DTO for user update requests; used when updating an existing user's information
 public class UserUpdateRequestDto {
     
-     @NotBlank
+    // User's full name; must not be blank
+    @NotBlank
     private String fullName;
 
+    // User's email address; must be valid email format and not blank
     @Email
     @NotBlank
     private String email;
 
-    
+    // Hashed password; optional during updates to allow keeping existing password
     private String passwordHash;
 
+    // User's role (ADMIN or CUSTOMER); required field
     @NotNull
     private UserRole role;
 
+    // Flag indicating if user account is active; can be updated to enable/disable accounts
     private Boolean isActive;
 
     public String getFullName() {

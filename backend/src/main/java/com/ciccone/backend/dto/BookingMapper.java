@@ -1,18 +1,22 @@
-package com.ciccone.backend.dto;
+﻿package com.ciccone.backend.dto;
 
 import org.springframework.stereotype.Component;
 
 import com.ciccone.backend.entity.BookingEntity;   
 
 
+// Component that converts between BookingEntity (database) and booking DTOs (API layer)
 @Component
 public class BookingMapper {
 
+    // Converts BookingRequestDto to BookingEntity for persistence to database
     public BookingEntity toEntity(BookingRequestDto dto) {
+        // Return null if input is null to prevent null pointer exceptions
         if (dto == null) {
             return null;
         }
 
+        // Create new entity and map all DTO fields to corresponding entity fields
         BookingEntity entity = new BookingEntity();
         entity.setServiceId(dto.getServiceId());
         entity.setStaffProfileId(dto.getStaffProfileId());
@@ -27,11 +31,14 @@ public class BookingMapper {
         return entity;
     }
 
+    // Converts BookingEntity from database to BookingResponseDto for API response
     public BookingResponseDto toResponseDto(BookingEntity entity) {
+        // Return null if entity is null to prevent null pointer exceptions
         if (entity == null) {
             return null;
         }
 
+        // Create response DTO with all entity fields, including audit timestamps and status
         return new BookingResponseDto(
                 entity.getId(),
                 entity.getServiceId(),

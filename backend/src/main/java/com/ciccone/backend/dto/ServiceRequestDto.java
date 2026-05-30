@@ -1,18 +1,28 @@
-package com.ciccone.backend.dto;
+﻿package com.ciccone.backend.dto;
 
 import jakarta.validation.constraints.*;
 
+// DTO for service creation and update requests
 public class ServiceRequestDto {      
    
+    // Service name; must not be blank
     @NotBlank
     private String name;
+    
+    // Service description; optional field for additional details
     private String description;
+    
+    // Duration of service in minutes; must be a positive number (at least 1)
     @NotNull
     @Positive
     private Integer durationMinutes;
+    
+    // Price of service in cents to avoid floating-point issues; must be zero or positive
     @NotNull
     @PositiveOrZero
     private Integer priceCents;
+    
+    // Flag indicating if service is available; optional with default value
     private Boolean isActive;
 
     public String getName() {

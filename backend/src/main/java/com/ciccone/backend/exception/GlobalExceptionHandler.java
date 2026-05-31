@@ -1,4 +1,4 @@
-﻿package com.ciccone.backend.exception;
+package com.ciccone.backend.exception;
 
 import java.time.OffsetDateTime;
 

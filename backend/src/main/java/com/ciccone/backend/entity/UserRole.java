@@ -1,4 +1,4 @@
-﻿package com.ciccone.backend.entity;
+package com.ciccone.backend.entity;
 
 // Enum defining user roles in the system
 public enum UserRole {

@@ -1,4 +1,4 @@
-﻿package com.ciccone.backend.dto;
+package com.ciccone.backend.dto;
 
 
 import com.ciccone.backend.entity.UserRole;

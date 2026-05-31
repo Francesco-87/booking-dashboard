@@ -1,4 +1,4 @@
-﻿package com.ciccone.backend.entity;
+package com.ciccone.backend.entity;
 
 // Enum defining the possible states of a booking
 public enum BookingStatus {

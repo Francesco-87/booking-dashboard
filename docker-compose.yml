@@ -11,5 +11,25 @@ services:
     volumes:
       - booking_pgdata:/var/lib/postgresql/data
 
+  backend:
+    build:
+      context: ./backend
+    container_name: booking_backend
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: booking_frontend
+    ports:
+      - "5173:80"
+    depends_on:
+      - backend
+
 volumes:
   booking_pgdata:

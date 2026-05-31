@@ -1,4 +1,4 @@
-﻿package com.ciccone.backend.entity;
+package com.ciccone.backend.entity;
 
 
 import java.time.OffsetDateTime;

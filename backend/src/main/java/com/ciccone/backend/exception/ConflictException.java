@@ -1,4 +1,4 @@
-﻿package com.ciccone.backend.exception;
+package com.ciccone.backend.exception;
 
 // Custom exception thrown when a request conflicts with existing data or system state
 // Commonly used for duplicate entries (e.g., duplicate email address) or invalid state transitions

@@ -1,4 +1,4 @@
-﻿package com.ciccone.backend.exception;
+package com.ciccone.backend.exception;
 
 // Custom exception thrown when the client sends invalid or malformed request data
 // Maps to HTTP 400 Bad Request response

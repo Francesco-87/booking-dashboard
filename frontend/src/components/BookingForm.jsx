@@ -1,14 +1,18 @@
-import { useState, useEffect } from "react"
+﻿import { useState, useEffect } from "react"
 
+// Form component for creating and updating booking appointments
+// Handles complex booking logic with customer selection, staff assignment, and datetime management
+// Supports both registered customers and guest customer entry
 function BookingForm({
   onSubmit,
   initialData = null,
   submitLabel = "Create Booking",
   title = "Create Booking",
-  services = [],
-  staff = [],
-  users = [],
+  services = [], // Array of available services
+  staff = [], // Array of available staff members
+  users = [], // Array of all users for customer/creator selection
 }) {
+  // Template for empty form state (used when creating new bookings)
   const emptyForm = {
     createdByUserId: "",
     customerUserId: "",
@@ -21,13 +25,21 @@ function BookingForm({
     notes: "",
   }
 
+  // State for managing form field values
   const [formData, setFormData] = useState(emptyForm)
+  
+  // Filter users to only show customers (exclude admin and staff)
   const filteredUsers = users.filter((user) => user.role === "CUSTOMER")
+  
+  // Get current time in datetime-local format for minimum start time validation
   const now = new Date().toISOString().slice(0, 16)
   
 
+  // Effect to initialize form with existing data or reset to empty form
   useEffect(() => {
     if (initialData) {
+      // Populate form with existing booking data (for edit mode)
+      // Convert ISO datetime strings to datetime-local format for input element
       setFormData({
         id: initialData.id,
         createdByUserId: initialData.createdByUserId ?? "",
@@ -45,10 +57,12 @@ function BookingForm({
         notes: initialData.notes ?? "",
       })
     } else {
+      // Reset to empty form when no initial data
       setFormData(emptyForm)
     }
   }, [initialData])
 
+  // Handle form field changes
   function handleChange(e) {
     const { name, value } = e.target
 
@@ -58,9 +72,14 @@ function BookingForm({
     }))
   }
 
+  // Handle form submission; converts form data to API payload format and calls parent callback
   async function handleSubmit(e) {
     e.preventDefault()
 
+    // Transform form data to API payload format:
+    // - Convert string IDs to numbers
+    // - Convert datetime-local to ISO format
+    // - Set null values for empty customer fields
     const payload = {
       ...formData,
       createdByUserId: Number(formData.createdByUserId),
@@ -79,21 +98,24 @@ function BookingForm({
         : null,
     }
 
+    // Call parent's onSubmit callback with formatted payload
     await onSubmit(payload)
 
+    // Reset form to empty state only when creating new booking
     if (!initialData) {
       setFormData(emptyForm)
     }
   }
 
 
- 
-
+  
+  // Render booking form with sections for staff/customer, service, and timing
   return (
     <div className="booking-form-wrapper">
       <h2>{title}</h2>
 
       <form className="booking-form" onSubmit={handleSubmit}>
+        {/* Created By User - who is creating the booking (required) */}
         <div className="form-field">
           <label htmlFor="createdByUserId">Created By</label>
           <select
@@ -112,6 +134,7 @@ function BookingForm({
           </select>
         </div>
 
+        {/* Customer Selection - optional registered customer */}
         <div className="form-field">
           <label htmlFor="customerUserId">Customer </label>
           <select
@@ -129,6 +152,7 @@ function BookingForm({
           </select>
         </div>
 
+        {/* Guest Customer Name - alternative to registered customer */}
         <div className="form-field">
           <label htmlFor="customerName">Guest Customer Name</label>
           <input
@@ -140,6 +164,7 @@ function BookingForm({
           />
         </div>
 
+        {/* Guest Customer Email - optional email for guest customers */}
         <div className="form-field">
           <label htmlFor="customerEmail">Guest Customer Email</label>
           <input
@@ -151,6 +176,7 @@ function BookingForm({
           />
         </div>
 
+        {/* Service Selection */}
         <div className="form-field">
           <label htmlFor="serviceId">Service</label>
           <select
@@ -169,6 +195,7 @@ function BookingForm({
           </select>
         </div>
 
+        {/* Staff Selection - who will perform the service */}
         <div className="form-field">
           <label htmlFor="staffProfileId">Performer</label>
           <select
@@ -187,6 +214,7 @@ function BookingForm({
           </select>
         </div>
 
+        {/* Start Time - minimum is current time to prevent past bookings */}
         <div className="form-field">
           <label htmlFor="startTime">Start Time</label>
           <input
@@ -200,6 +228,7 @@ function BookingForm({
           />
         </div>
 
+        {/* End Time - minimum is start time or current time */}
         <div className="form-field">
           <label htmlFor="endTime">End Time</label>
           <input
@@ -213,6 +242,7 @@ function BookingForm({
           />
         </div>
 
+        {/* Notes - optional additional information */}
         <div className="form-field">
           <label htmlFor="notes">Notes</label>
           <textarea
@@ -223,6 +253,7 @@ function BookingForm({
           />
         </div>
 
+        {/* Submit button */}
         <div className="form-actions">
           <button type="submit" className="btn btn--primary">
             {submitLabel}

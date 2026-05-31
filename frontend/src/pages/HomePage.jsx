@@ -6,17 +6,22 @@ function HomePage() {
 
   return (
     <div className="home-page">
+      {/* Landing page introducing the system */}
       <div className="home-page__hero">
         <h1>Booking & Operations Dashboard</h1>
         <p>Select a role to continue.</p>
       </div>
 
+      {/* Role-based entry points */}
       <div className="home-grid">
+
+        {/* Administrative area used to manage the system */}
         <div className="home-card">
           <h2>Admin</h2>
           <p>
             Manage services, staff, users and bookings.
           </p>
+
           <button
             className="btn btn--primary"
             onClick={() => navigate("/admin")}
@@ -25,11 +30,13 @@ function HomePage() {
           </button>
         </div>
 
+        {/* Customer-facing area for booking management */}
         <div className="home-card">
           <h2>Customer</h2>
           <p>
             View and manage customer bookings.
           </p>
+
           <button
             className="btn btn--primary"
             onClick={() => navigate("/customer")}
@@ -37,6 +44,7 @@ function HomePage() {
             Enter Customer Area
           </button>
         </div>
+
       </div>
     </div>
   )

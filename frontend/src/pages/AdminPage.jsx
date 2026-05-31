@@ -7,13 +7,19 @@ function AdminPage() {
 
   return (
     <div className="admin-page">
+      {/* Reusable navigation button to return to the previous page */}
       <BackButton />
+
+      {/* Page header */}
       <div className="admin-page__header">
         <h1>Admin Dashboard</h1>
         <p>Manage your system.</p>
       </div>
 
+      {/* Main administration navigation cards */}
       <div className="admin-grid">
+
+        {/* Service management section */}
         <div className="admin-card">
           <h2>Services</h2>
           <p>Create, update, activate and deactivate services.</p>
@@ -25,6 +31,7 @@ function AdminPage() {
           </button>
         </div>
 
+        {/* Staff profile management section */}
         <div className="admin-card">
           <h2>Staff</h2>
           <p>Manage staff profiles and performers.</p>
@@ -36,6 +43,7 @@ function AdminPage() {
           </button>
         </div>
 
+        {/* User account management section */}
         <div className="admin-card">
           <h2>Users</h2>
           <p>Create and manage system users.</p>
@@ -47,6 +55,7 @@ function AdminPage() {
           </button>
         </div>
 
+        {/* Booking management section */}
         <div className="admin-card">
           <h2>Bookings</h2>
           <p>View, create and manage bookings.</p>
@@ -57,6 +66,7 @@ function AdminPage() {
             Manage Bookings
           </button>
         </div>
+
       </div>
     </div>
   )

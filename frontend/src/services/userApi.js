@@ -1,6 +1,6 @@
-
 const USER_API_URL = "http://localhost:8080/api/users"
 
+// Retrieve all users from the backend
 async function getUsers() {
   try {
     const response = await fetch(USER_API_URL)
@@ -10,6 +10,7 @@ async function getUsers() {
   }
 }
 
+// Create a new user account
 async function createUser(userData) {
   try {
     const response = await fetch(USER_API_URL, {
@@ -26,6 +27,7 @@ async function createUser(userData) {
   }
 }
 
+// Update an existing user account
 async function updateUser(userData) {
   try {
     const response = await fetch(`${USER_API_URL}/${userData.id}`, {
@@ -42,10 +44,12 @@ async function updateUser(userData) {
   }
 }
 
+// Disable a user account without removing it from the system
 async function deactivateUser(userData) {
   return updateUser({ ...userData, isActive: false })
 }
 
+// Restore access to a previously deactivated user account
 async function activateUser(userData) {
   return updateUser({ ...userData, isActive: true })
 }

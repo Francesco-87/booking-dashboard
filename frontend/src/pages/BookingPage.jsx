@@ -15,78 +15,92 @@ import "../css/BookingPage.css"
 function BookingPage() {
   const [bookings, setBookings] = useState([])
   const [selectedBooking, setSelectedBooking] = useState(null)
+
+  // Dropdown data used by the booking form
   const [users, setUsers] = useState([])
   const [services, setServices] = useState([])
   const [staff, setStaff] = useState([])
 
-
+  // Load all bookings from the backend
   async function loadBookings() {
     const data = await getBookings()
     setBookings(data || [])
   }
 
+  // Load bookings and dropdown data when the page opens
   useEffect(() => {
     loadBookings()
     loadDropdownData()
   }, [])
 
+  // Create a new booking and refresh the booking list
   async function handleBookingCreate(bookingData) {
     await createBooking(bookingData)
     await loadBookings()
   }
 
+  // Update an existing booking and close the edit modal
   async function handleBookingUpdate(bookingData) {
-     try {
-    await updateBooking(bookingData.id, bookingData)
-    await loadBookings()
-    setSelectedBooking(null)
-  } catch (error) {
-    alert(error.message)
+    try {
+      await updateBooking(bookingData.id, bookingData)
+      await loadBookings()
+      setSelectedBooking(null)
+    } catch (error) {
+      alert(error.message)
+    }
   }
-}
-async function handleBookingCancel(id) {
-  try {
-    await cancelBooking(id)
-    await loadBookings()
-  } catch (error) {
-    alert(error.message)
+
+  // Cancel a booking through the dedicated cancellation endpoint
+  async function handleBookingCancel(id) {
+    try {
+      await cancelBooking(id)
+      await loadBookings()
+    } catch (error) {
+      alert(error.message)
+    }
   }
-}
 
-async function loadDropdownData() {
-  const servicesData = await getServices()
-  const staffData = await getStaff()
-  const usersData = await getUsers()
+  // Load lookup data used by booking dropdowns and display names
+  async function loadDropdownData() {
+    const servicesData = await getServices()
+    const staffData = await getStaff()
+    const usersData = await getUsers()
 
-  setServices(servicesData)
-  setStaff(staffData)
-  setUsers(usersData)
-  
-}
-function getServiceName(serviceId) {
-  const service = services.find((s) => s.id === serviceId)
-  return service ? service.name : `Service #${serviceId}`
-}
+    setServices(servicesData)
+    setStaff(staffData)
+    setUsers(usersData)
+  }
 
-function getStaffName(staffId) {
-  const staffMember = staff.find((s) => s.id === staffId)
-  return staffMember ? staffMember.displayName : `Staff #${staffId}`
-}
+  // Convert service IDs into readable service names
+  function getServiceName(serviceId) {
+    const service = services.find((s) => s.id === serviceId)
+    return service ? service.name : `Service #${serviceId}`
+  }
 
-function getUserName(userId) {
-  const user = users.find((u) => u.id === userId)
-  return user ? user.fullName : `User #${userId}`
-}
+  // Convert staff profile IDs into performer names
+  function getStaffName(staffId) {
+    const staffMember = staff.find((s) => s.id === staffId)
+    return staffMember ? staffMember.displayName : `Staff #${staffId}`
+  }
 
+  // Convert user IDs into readable user names
+  function getUserName(userId) {
+    const user = users.find((u) => u.id === userId)
+    return user ? user.fullName : `User #${userId}`
+  }
 
   return (
     <div className="booking-page">
+      {/* Reusable navigation button */}
       <BackButton />
+
+      {/* Page header */}
       <div className="booking-page__header">
         <h1>Booking Management</h1>
         <p>View and manage bookings.</p>
       </div>
 
+      {/* Booking creation form */}
       <BookingForm
         services={services}
         staff={staff}
@@ -96,6 +110,7 @@ function getUserName(userId) {
         title="Create Booking"
       />
 
+      {/* Booking list */}
       <div className="booking-list">
         {bookings.length === 0 && (
           <p>No bookings found.</p>
@@ -105,7 +120,8 @@ function getUserName(userId) {
           <div key={booking.id} className="booking-card">
             <div className="booking-card__header">
               <h2>
-                 {booking.customerUserId
+                {/* Display registered customer name, guest name, or fallback text */}
+                {booking.customerUserId
                   ? getUserName(booking.customerUserId)
                   : booking.customerName || "Guest Customer"}
               </h2>
@@ -116,6 +132,7 @@ function getUserName(userId) {
               <p>Performer: {getStaffName(booking.staffProfileId)}</p>
               <p>Created by: {getUserName(booking.createdByUserId)}</p>
 
+              {/* Guest bookings may contain an email address */}
               {booking.customerEmail && (
                 <p>Email: {booking.customerEmail}</p>
               )}
@@ -124,11 +141,13 @@ function getUserName(userId) {
               <p>End: {new Date(booking.endTime).toLocaleString()}</p>
               <p>Status: {booking.status}</p>
 
+              {/* Optional notes attached to the booking */}
               {booking.notes && (
                 <p>Notes: {booking.notes}</p>
               )}
             </div>
 
+            {/* Booking actions */}
             <div className="booking-card__actions">
               <button
                 type="button"
@@ -137,6 +156,7 @@ function getUserName(userId) {
               >
                 Edit
               </button>
+
               <button
                 type="button"
                 className="btn btn--danger"
@@ -149,6 +169,7 @@ function getUserName(userId) {
         ))}
       </div>
 
+      {/* Edit booking modal */}
       {selectedBooking && (
         <div
           className="booking-edit-modal"
@@ -160,6 +181,7 @@ function getUserName(userId) {
           >
             <div className="modal-header">
               <h2>Edit Booking</h2>
+
               <button
                 type="button"
                 className="btn btn--secondary"
@@ -169,6 +191,7 @@ function getUserName(userId) {
               </button>
             </div>
 
+            {/* Reuse the same form component for booking updates */}
             <BookingForm
               initialData={selectedBooking}
               services={services}

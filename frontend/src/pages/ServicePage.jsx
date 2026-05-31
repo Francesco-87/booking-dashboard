@@ -14,15 +14,18 @@ function ServicePage() {
   const [services, setServices] = useState([])
   const [selectedService, setSelectedService] = useState(null)
 
+  // Load all services from the backend
   async function loadServices() {
     const data = await getServices()
     setServices(data)
   }
 
+  // Load service data when the page opens
   useEffect(() => {
     loadServices()
   }, [])
 
+  // Toggle service availability without deleting the service
   async function handleServiceChange(serviceData) {
     if (serviceData.isActive) {
       await deactivateService(serviceData)
@@ -33,11 +36,13 @@ function ServicePage() {
     await loadServices()
   }
 
+  // Create a new service and refresh the list
   async function handleServiceCreate(serviceData) {
     await createService(serviceData)
     await loadServices()
   }
 
+  // Update an existing service and close the edit modal
   async function handleServiceUpdate(serviceData) {
     await updateService(serviceData)
     await loadServices()
@@ -47,20 +52,26 @@ function ServicePage() {
   return (
     <div className="service-page">
       <BackButton />
+
+      {/* Page header */}
       <div className="service-page__header">
         <h1>Service Management</h1>
         <p>Create, edit, activate, and deactivate services.</p>
       </div>
 
+      {/* Service creation form */}
       <div className="service-page__create">
         <ServiceForm onSubmit={handleServiceCreate} />
       </div>
 
+      {/* Service list */}
       <div className="service-list">
         {services.map((service) => (
           <div key={service.id} className="service-card">
             <div className="service-card__header">
               <h2>{service.name}</h2>
+
+              {/* Status badge reflects whether the service can be booked */}
               <span
                 className={
                   service.isActive
@@ -84,12 +95,13 @@ function ServicePage() {
               </p>
             </div>
 
+            {/* Service actions */}
             <div className="service-card__actions">
               <button
                 type="button"
                 className="btn btn--secondary"
                 onClick={() => setSelectedService(service)}
-                >
+              >
                 Edit
               </button>
 
@@ -105,11 +117,13 @@ function ServicePage() {
         ))}
       </div>
 
+      {/* Edit service modal */}
       {selectedService && (
         <div className="modal-overlay" onClick={() => setSelectedService(null)}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
               <h2>Edit Service</h2>
+
               <button
                 type="button"
                 className="btn btn--secondary"
@@ -119,6 +133,7 @@ function ServicePage() {
               </button>
             </div>
 
+            {/* Reuse the same form component for service updates */}
             <ServiceForm
               onSubmit={handleServiceUpdate}
               initialData={selectedService}

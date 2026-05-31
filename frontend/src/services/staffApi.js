@@ -1,5 +1,6 @@
-  const STAFF_API_URL = "http://localhost:8080/api/staff-profiles"
+const STAFF_API_URL = "http://localhost:8080/api/staff-profiles"
 
+// Retrieve all staff profiles from the backend
 async function getStaff() {
   try {
     const response = await fetch(STAFF_API_URL)
@@ -9,6 +10,7 @@ async function getStaff() {
   }
 }
 
+// Create a new staff profile
 async function createStaff(staffData) {
   try {
     const response = await fetch(STAFF_API_URL, {
@@ -25,6 +27,7 @@ async function createStaff(staffData) {
   }
 }
 
+// Update an existing staff profile
 async function updateStaff(staffData) {
   try {
     const response = await fetch(`${STAFF_API_URL}/${staffData.id}`, {
@@ -41,10 +44,12 @@ async function updateStaff(staffData) {
   }
 }
 
+// Mark a staff profile as inactive so it can no longer be booked
 async function deactivateStaff(staffData) {
   return updateStaff({ ...staffData, isActive: false })
 }
 
+// Restore a previously deactivated staff profile
 async function activateStaff(staffData) {
   return updateStaff({ ...staffData, isActive: true })
 }

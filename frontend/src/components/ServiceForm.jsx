@@ -1,11 +1,14 @@
-import { useState, useEffect } from "react"
+﻿import { useState, useEffect } from "react"
 
+// Form component for creating and updating service offerings
+// Handles service details including name, description, duration, and pricing
 function ServiceForm({
   onSubmit,
   initialData = null,
   submitLabel = "Create Service",
   title = "Create Service",
 }) {
+  // Template for empty form state (used when creating new services)
   const emptyForm = {
     name: "",
     description: "",
@@ -13,10 +16,13 @@ function ServiceForm({
     priceCents: "",
   }
 
+  // State for managing form field values
   const [formData, setFormData] = useState(emptyForm)
 
+  // Effect to initialize form with existing data or reset to empty form
   useEffect(() => {
     if (initialData) {
+      // Populate form with existing service data (for edit mode)
       setFormData({
         id: initialData.id,
         name: initialData.name ?? "",
@@ -26,10 +32,12 @@ function ServiceForm({
         isActive: initialData.isActive,
       })
     } else {
+      // Reset to empty form when no initial data
       setFormData(emptyForm)
     }
   }, [initialData])
 
+  // Handle form field changes; converts number inputs to Number type
   function handleChange(e) {
     const { name, value, type } = e.target
 
@@ -39,10 +47,13 @@ function ServiceForm({
     }))
   }
 
+  // Handle form submission; calls parent callback and resets form if creating new service
   async function handleSubmit(e) {
     e.preventDefault()
+    // Call parent's onSubmit callback with form data
     await onSubmit(formData)
 
+    // Reset form to empty state only when creating new service
     if (!initialData) {
       setFormData(emptyForm)
     }
@@ -53,6 +64,7 @@ function ServiceForm({
       <h2>{title}</h2>
 
       <form className="service-form" onSubmit={handleSubmit}>
+        {/* Service Name field */}
         <div className="form-field">
           <label htmlFor="name">Service Name</label>
           <input
@@ -67,6 +79,7 @@ function ServiceForm({
           />
         </div>
 
+        {/* Service Description field */}
         <div className="form-field">
           <label htmlFor="description">Description</label>
           <textarea
@@ -79,7 +92,9 @@ function ServiceForm({
           />
         </div>
 
+        {/* Duration and Price fields in a row layout */}
         <div className="form-row">
+          {/* Duration field - minutes required */}
           <div className="form-field">
             <label htmlFor="durationMinutes">Duration (minutes)</label>
             <input
@@ -95,6 +110,7 @@ function ServiceForm({
             />
           </div>
 
+          {/* Price field - in cents to avoid floating point issues */}
           <div className="form-field">
             <label htmlFor="priceCents">Price (cents)</label>
             <input
@@ -111,6 +127,7 @@ function ServiceForm({
           </div>
         </div>
 
+        {/* Submit button */}
         <div className="form-actions">
           <button type="submit" className="btn btn--primary">
             {submitLabel}

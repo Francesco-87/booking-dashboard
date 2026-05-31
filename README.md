@@ -2,11 +2,11 @@
 
 ## Overview
 
-The Booking & Operations Admin Dashboard is a full-stack web application built to simulate the core operational workflows of a service-based business.
+The Booking & Operations Admin Dashboard is a full-stack web application designed to simulate the operational workflows of a service-based business.
 
-The system allows administrators to manage services, staff profiles, users, and bookings through a centralized interface. The project focuses on practical business workflows, validation logic, CRUD operations, database design, and frontend/backend integration.
+The system allows administrators to manage services, staff profiles, users, and bookings through a centralized interface. The project focuses on practical business processes, validation logic, CRUD operations, database design, frontend/backend integration, and containerized deployment.
 
-The application was developed as a portfolio project to demonstrate backend development with Spring Boot, relational database design with PostgreSQL, and frontend development with React.
+The application was built as a portfolio project to demonstrate backend development with Spring Boot, relational database design with PostgreSQL, frontend development with React, and deployment using Docker Compose.
 
 ---
 
@@ -27,10 +27,14 @@ The application was developed as a portfolio project to demonstrate backend deve
 * JavaScript
 * CSS
 
-### Development Tools
+### Infrastructure
 
 * Docker
 * Docker Compose
+* Nginx
+
+### Development Tools
+
 * Git
 * Postman
 * VS Code
@@ -111,7 +115,7 @@ Administrators can:
 * Update bookings
 * Cancel bookings
 
-Bookings support two customer types:
+Bookings support two customer types.
 
 #### Registered Customers
 
@@ -128,7 +132,7 @@ Bookings can be created without a registered account using:
 
 ## Booking Validation
 
-The system includes business validation rules on the backend.
+The backend enforces several business rules.
 
 ### Time Validation
 
@@ -139,19 +143,19 @@ Bookings cannot:
 
 ### Staff Availability Validation
 
-A staff member cannot be assigned to overlapping bookings.
+A staff member cannot have overlapping bookings.
 
-The system checks existing bookings and rejects conflicting reservations.
+The system validates existing bookings and rejects scheduling conflicts.
 
 ### Reference Validation
 
-The system verifies:
+The system verifies that referenced entities exist before a booking is created or updated.
+
+Validation includes:
 
 * Service exists
 * Staff profile exists
 * User references exist
-
-before a booking is created or updated.
 
 ---
 
@@ -159,23 +163,27 @@ before a booking is created or updated.
 
 ### Active Booking
 
-A booking is initially created with an active status.
+Bookings are initially created with an active status.
 
-### Cancellation
+### Booking Cancellation
 
 Bookings are not deleted.
 
-Instead, the system provides a dedicated cancellation workflow:
+Instead, the application provides a dedicated cancellation workflow.
 
-PATCH
+Endpoint:
 
-/api/bookings/{id}/cancel
+```text
+PATCH /api/bookings/{id}/cancel
+```
 
-The booking status is changed to:
+The booking status is updated to:
 
+```text
 CANCELLED
+```
 
-This preserves historical booking information.
+This preserves historical booking data.
 
 ---
 
@@ -207,14 +215,20 @@ Booking creation uses dropdown selections for:
 * Staff profiles
 * Users
 
-This replaces manual ID entry and improves usability.
+This improves usability and prevents invalid manual ID entry.
 
-### Frontend Validation
+### Role-Aware User Selection
 
-The booking form prevents:
+Customer selection only displays users with the CUSTOMER role.
+
+This prevents administrators and staff accounts from being selected as customers.
+
+### Frontend Date Validation
+
+The booking form prevents users from:
 
 * Selecting start times in the past
-* Selecting end times before start time
+* Selecting end times before the selected start time
 
 Backend validation remains the final authority.
 
@@ -281,19 +295,15 @@ Key fields:
 
 ### Backend Structure
 
+```text
 Controller
-
-↓
-
+    ↓
 Service
-
-↓
-
+    ↓
 Repository
-
-↓
-
+    ↓
 Database
+```
 
 Responsibilities:
 
@@ -302,25 +312,82 @@ Responsibilities:
 * Repositories handle persistence
 * DTOs separate API contracts from entities
 
----
-
 ### Frontend Structure
 
+```text
 Pages
-
-↓
-
+    ↓
 Components
-
-↓
-
+    ↓
 API Services
+```
 
 Responsibilities:
 
 * Pages manage state
-* Components handle UI rendering
+* Components handle rendering and user interaction
 * API services communicate with backend endpoints
+
+---
+
+## Docker Support
+
+The application is fully containerized using Docker and Docker Compose.
+
+The deployment consists of three services:
+
+* PostgreSQL database
+* Spring Boot backend
+* React frontend served through Nginx
+
+Docker networking is used for communication between services.
+
+The backend connects to PostgreSQL through the Docker service name rather than localhost.
+
+A dedicated Spring Docker profile is used to separate containerized configuration from local development settings.
+
+---
+
+## Running the Application
+
+### Prerequisites
+
+* Docker Desktop
+* Docker Compose
+
+### Start Application
+
+From the project root:
+
+```bash
+docker compose up --build
+```
+
+### Access Application
+
+Frontend:
+
+```text
+http://localhost:5173
+```
+
+Backend API:
+
+```text
+http://localhost:8080
+```
+
+Example endpoint:
+
+```text
+http://localhost:8080/api/services
+```
+
+### Stop Application
+
+```bash
+docker compose down
+```
 
 ---
 
@@ -358,12 +425,13 @@ Benefits:
 
 ### Guest Booking Support
 
-Customers can book without creating an account.
+Customers can create bookings without creating an account.
 
 Benefits:
 
-* Simpler booking flow
-* Supports walk-in or one-time customers
+* Simpler booking workflow
+* Supports one-time customers
+* More realistic business process
 
 ---
 
@@ -379,7 +447,7 @@ Potential future enhancements:
 * Reporting dashboard
 * Email notifications
 
-These features were intentionally excluded to keep the project focused on demonstrating core business operations and full-stack development skills.
+These features were intentionally excluded to keep the project focused on demonstrating core operational workflows and full-stack development principles.
 
 ---
 
@@ -391,9 +459,14 @@ This project demonstrates:
 * CRUD operations
 * Spring Boot application architecture
 * PostgreSQL database design
+* Flyway database migrations
 * Business rule validation
 * React state management
 * Component reuse
 * Frontend/backend integration
 * Error handling
+* Docker containerization
+* Multi-container application deployment
+* Docker Compose orchestration
+* Environment-specific configuration
 * Full-stack application development

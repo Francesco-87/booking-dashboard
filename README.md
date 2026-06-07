@@ -1,12 +1,104 @@
 # Booking & Operations Admin Dashboard
 
-## Overview
+## Business Problem
 
-The Booking & Operations Admin Dashboard is a full-stack web application built to simulate the core operational workflows of a service-based business.
+Service-based businesses often need to manage services, staff members, customers, and bookings through a centralized system. As booking volume increases, manual processes become difficult to maintain and can lead to scheduling conflicts, inconsistent customer information, and limited operational visibility.
 
-The system allows administrators to manage services, staff profiles, users, and bookings through a centralized interface. The project focuses on practical business workflows, validation logic, CRUD operations, database design, and frontend/backend integration.
+This project simulates an internal operations platform designed to support these workflows. The system allows administrators to manage services, staff profiles, users, and bookings while enforcing business rules that help maintain scheduling accuracy and data integrity.
 
-The application was developed as a portfolio project to demonstrate backend development with Spring Boot, relational database design with PostgreSQL, and frontend development with React.
+The application was built as a portfolio project to demonstrate full-stack software development using Spring Boot, React, PostgreSQL, and Docker.
+
+---
+
+## Project Goals
+
+The goal of this project was not simply to build CRUD functionality, but to model realistic operational workflows commonly found in service businesses.
+
+The project demonstrates:
+
+* User and role management
+* Staff profile administration
+* Service catalog management
+* Booking lifecycle management
+* Scheduling validation
+* Historical data preservation
+* Full-stack architecture
+* Containerized deployment
+
+---
+
+## Key Technical Challenges
+
+### Booking Conflict Detection
+
+The system prevents overlapping bookings for staff members.
+
+When a booking is created or updated, the application validates existing bookings and rejects requests that would create scheduling conflicts.
+
+### Support for Registered and Guest Customers
+
+Bookings support two customer models:
+
+* Registered customers linked to user accounts
+* Guest customers without accounts
+
+This reflects common business requirements where some customers prefer account-based management while others require only a one-time booking.
+
+### Historical Data Preservation
+
+Instead of deleting records, the application uses cancellation and deactivation workflows.
+
+Benefits include:
+
+* Preserving historical information
+* Maintaining referential integrity
+* Supporting future reporting capabilities
+* Reflecting common enterprise application patterns
+
+### Layered Validation
+
+Validation is implemented at multiple levels:
+
+* Frontend validation
+* Backend business validation
+* Database constraints
+
+This helps ensure data integrity regardless of how the system is accessed.
+
+---
+
+## Design Decisions
+
+### Separate Staff Profiles and User Accounts
+
+Staff profiles are intentionally separated from user accounts.
+
+Benefits:
+
+* Staff users without performer profiles
+* Cleaner booking relationships
+* Greater flexibility in the domain model
+* Easier future expansion
+
+### Booking Cancellation Instead of Deletion
+
+Bookings are cancelled rather than deleted.
+
+Benefits:
+
+* Historical tracking
+* Auditing capabilities
+* Data preservation
+
+### Soft Deactivation
+
+Users, services, and staff profiles can be deactivated rather than removed.
+
+Benefits:
+
+* Preserves historical references
+* Prevents broken relationships
+* Reflects real-world business systems
 
 ---
 
@@ -27,13 +119,72 @@ The application was developed as a portfolio project to demonstrate backend deve
 * JavaScript
 * CSS
 
-### Development Tools
+### Infrastructure
 
 * Docker
 * Docker Compose
+* Nginx
+
+### Development Tools
+
 * Git
 * Postman
 * VS Code
+
+---
+
+## System Architecture
+
+```text
+React Frontend
+       │
+       ▼
+Spring Boot REST API
+       │
+       ▼
+PostgreSQL Database
+```
+
+Backend responsibilities:
+
+* REST API endpoints
+* Business rule validation
+* Data persistence
+* DTO mapping
+* Exception handling
+
+Frontend responsibilities:
+
+* User interface
+* Form validation
+* State management
+* API communication
+
+---
+
+## Project Structure
+
+```text
+booking-dashboard/
+│
+├── backend/
+│   ├── controllers/
+│   ├── services/
+│   ├── repositories/
+│   ├── dtos/
+│   ├── entities/
+│   └── exceptions/
+│
+├── frontend/
+│   ├── pages/
+│   ├── components/
+│   ├── services/
+│   └── styles/
+│
+├── docker-compose.yml
+│
+└── README.md
+```
 
 ---
 
@@ -73,19 +224,9 @@ Supported roles:
 * STAFF
 * CUSTOMER
 
-User accounts remain in the system even when deactivated.
-
 ---
 
 ### Staff Profile Management
-
-Staff profiles are managed separately from user accounts.
-
-This design allows:
-
-* Staff users without a performer profile
-* Performer profiles linked to user accounts
-* Future expansion of operational roles
 
 Administrators can:
 
@@ -111,24 +252,24 @@ Administrators can:
 * Update bookings
 * Cancel bookings
 
-Bookings support two customer types:
+Bookings support:
 
 #### Registered Customers
 
-Bookings can be linked directly to a CUSTOMER user account.
+Bookings linked to CUSTOMER accounts.
 
 #### Guest Customers
 
-Bookings can be created without a registered account using:
+Bookings created using:
 
 * Customer name
 * Customer email
 
+without requiring an account.
+
 ---
 
 ## Booking Validation
-
-The system includes business validation rules on the backend.
 
 ### Time Validation
 
@@ -139,19 +280,19 @@ Bookings cannot:
 
 ### Staff Availability Validation
 
-A staff member cannot be assigned to overlapping bookings.
+The system prevents overlapping bookings for staff members.
 
-The system checks existing bookings and rejects conflicting reservations.
+Conflicting bookings are rejected before being saved.
 
 ### Reference Validation
 
-The system verifies:
+The application verifies that referenced entities exist before a booking can be created or updated.
+
+Validation includes:
 
 * Service exists
 * Staff profile exists
 * User references exist
-
-before a booking is created or updated.
 
 ---
 
@@ -159,23 +300,25 @@ before a booking is created or updated.
 
 ### Active Booking
 
-A booking is initially created with an active status.
+Bookings are initially created with an active status.
 
-### Cancellation
+### Booking Cancellation
 
 Bookings are not deleted.
 
-Instead, the system provides a dedicated cancellation workflow:
+Endpoint:
 
-PATCH
+```text
+PATCH /api/bookings/{id}/cancel
+```
 
-/api/bookings/{id}/cancel
+Status becomes:
 
-The booking status is changed to:
-
+```text
 CANCELLED
+```
 
-This preserves historical booking information.
+This preserves historical booking data.
 
 ---
 
@@ -207,14 +350,20 @@ Booking creation uses dropdown selections for:
 * Staff profiles
 * Users
 
-This replaces manual ID entry and improves usability.
+This prevents invalid manual ID entry and improves usability.
 
-### Frontend Validation
+### Role-Aware User Selection
 
-The booking form prevents:
+Customer selection only displays users with the CUSTOMER role.
+
+This prevents administrators and staff accounts from being selected as customers.
+
+### Frontend Date Validation
+
+The booking form prevents users from:
 
 * Selecting start times in the past
-* Selecting end times before start time
+* Selecting end times before the selected start time
 
 Backend validation remains the final authority.
 
@@ -224,146 +373,103 @@ Backend validation remains the final authority.
 
 ### Users
 
-Stores system users.
-
-Key fields:
-
-* id
-* fullName
-* email
-* role
-* isActive
+Stores user accounts and role information.
 
 ### Staff Profiles
 
-Stores bookable performers.
-
-Key fields:
-
-* id
-* userId
-* displayName
-* description
-* isActive
+Stores bookable staff members linked to user accounts.
 
 ### Services
 
 Stores available services.
 
-Key fields:
-
-* id
-* name
-* description
-* durationMinutes
-* priceCents
-* isActive
-
 ### Bookings
 
-Stores booking information.
+Stores scheduling and customer information.
 
-Key fields:
+Relationships:
 
-* serviceId
-* staffProfileId
-* createdByUserId
-* customerUserId
-* customerName
-* customerEmail
-* startTime
-* endTime
-* status
+```text
+Users
+   │
+   └── Staff Profiles
 
----
+Services
+   │
+   └── Bookings
 
-## Architecture
+Staff Profiles
+   │
+   └── Bookings
 
-### Backend Structure
-
-Controller
-
-↓
-
-Service
-
-↓
-
-Repository
-
-↓
-
-Database
-
-Responsibilities:
-
-* Controllers expose REST endpoints
-* Services contain business logic
-* Repositories handle persistence
-* DTOs separate API contracts from entities
+Users
+   │
+   └── Bookings
+```
 
 ---
 
-### Frontend Structure
+## Docker Support
 
-Pages
+The application is fully containerized using Docker and Docker Compose.
 
-↓
+Deployment consists of:
 
-Components
+* PostgreSQL database
+* Spring Boot backend
+* React frontend served through Nginx
 
-↓
+The backend connects to PostgreSQL through Docker networking using service names rather than localhost.
 
-API Services
-
-Responsibilities:
-
-* Pages manage state
-* Components handle UI rendering
-* API services communicate with backend endpoints
+A dedicated Spring Docker profile is used to separate containerized and local development configurations.
 
 ---
 
-## Design Decisions
+## Running the Application
 
-### Soft Deactivation
+### Prerequisites
 
-Services, users, and staff profiles are deactivated rather than deleted.
+* Docker Desktop
+* Docker Compose
 
-Benefits:
+### Clone Repository
 
-* Preserves historical data
-* Prevents broken references
-* Reflects real business systems
+```bash
+git clone <repository-url>
+cd booking-dashboard
+```
 
-### Separate Staff Profiles
+### Start Application
 
-Staff profiles are separated from user accounts.
+```bash
+docker compose up --build
+```
 
-Benefits:
+### Access Application
 
-* More flexible business model
-* Cleaner booking relationships
-* Easier future expansion
+Frontend:
 
-### Booking Cancellation Instead of Deletion
+```text
+http://localhost:5173
+```
 
-Bookings remain in the database.
+Backend:
 
-Benefits:
+```text
+http://localhost:8080
+```
 
-* Historical tracking
-* Auditing
-* Operational reporting
+Example API endpoint:
 
-### Guest Booking Support
+```text
+http://localhost:8080/api/services
+```
 
-Customers can book without creating an account.
+### Stop Application
 
-Benefits:
-
-* Simpler booking flow
-* Supports walk-in or one-time customers
+```bash
+docker compose down
+```
 
 ---
 
@@ -379,21 +485,29 @@ Potential future enhancements:
 * Reporting dashboard
 * Email notifications
 
-These features were intentionally excluded to keep the project focused on demonstrating core business operations and full-stack development skills.
+These features were intentionally excluded to keep the project focused on core operational workflows and full-stack application development.
 
 ---
 
 ## Learning Outcomes
 
-This project demonstrates:
+This project demonstrates practical experience with:
 
+* Java application development
+* Spring Boot architecture
 * REST API design
 * CRUD operations
-* Spring Boot application architecture
 * PostgreSQL database design
-* Business rule validation
-* React state management
+* Flyway database migrations
+* Business rule implementation
+* DTO-based API design
+* Validation strategies
+* Exception handling
+* React frontend development
 * Component reuse
 * Frontend/backend integration
-* Error handling
+* Docker containerization
+* Multi-container deployment
+* Docker Compose orchestration
+* Environment-specific configuration
 * Full-stack application development

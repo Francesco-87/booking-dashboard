@@ -120,9 +120,14 @@ Benefits:
 * CSS
 
 ### Infrastructure
+### Infrastructure
 
 * Docker
 * Docker Compose
+* Nginx
+
+### Development Tools
+
 * Nginx
 
 ### Development Tools
@@ -301,7 +306,9 @@ Validation includes:
 ### Active Booking
 
 Bookings are initially created with an active status.
+Bookings are initially created with an active status.
 
+### Booking Cancellation
 ### Booking Cancellation
 
 Bookings are not deleted.
@@ -317,7 +324,9 @@ Status becomes:
 ```text
 CANCELLED
 ```
+```
 
+This preserves historical booking data.
 This preserves historical booking data.
 
 ---
@@ -359,10 +368,13 @@ Customer selection only displays users with the CUSTOMER role.
 This prevents administrators and staff accounts from being selected as customers.
 
 ### Frontend Date Validation
+### Frontend Date Validation
 
+The booking form prevents users from:
 The booking form prevents users from:
 
 * Selecting start times in the past
+* Selecting end times before the selected start time
 * Selecting end times before the selected start time
 
 Backend validation remains the final authority.
